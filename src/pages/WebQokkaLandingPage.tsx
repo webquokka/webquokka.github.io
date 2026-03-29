@@ -3,8 +3,8 @@ import { useState, useEffect, useRef } from "react";
 /* ─────────────────────────────────────────────
    UTILITY: simple intersection-observer hook
 ───────────────────────────────────────────── */
-function useInView(threshold = 0.15) {
-  const ref = useRef(null);
+function useInView(threshold = 0.15): [React.RefObject<HTMLDivElement | null>, boolean] {
+  const ref = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
   useEffect(() => {
     const el = ref.current;
@@ -966,9 +966,9 @@ const Contact = () => {
   const [form, setForm] = useState({ name: "", business: "", email: "", phone: "", service: "", message: "" });
   const [status, setStatus] = useState("idle"); // idle | loading | success | error
 
-  const handleChange = (e) => setForm(f => ({ ...f, [e.target.name]: e.target.value }));
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => setForm(f => ({ ...f, [e.target.name]: e.target.value }));
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus("loading");
     // ── Firebase / backend integration point ──
@@ -1516,23 +1516,136 @@ const Footer = () => (
 );
 
 /* ─────────────────────────────────────────────
-   PAGE LOADER
+   PAGE LOADER – Quokka pushes the screen away
 ───────────────────────────────────────────── */
+const QuokkaPushing = ({ phase }: { phase: "loading" | "out" }) => (
+  <div style={{ position: "relative", display: "inline-block" }}>
+    <style>{`
+      @keyframes quokka-strain {
+        0%,100% { transform: translateY(0px) rotate(0deg); }
+        25%     { transform: translateY(-6px) rotate(-2deg); }
+        50%     { transform: translateY(-10px) rotate(0deg) scaleX(0.97); }
+        75%     { transform: translateY(-5px) rotate(2deg); }
+      }
+      @keyframes quokka-lunge {
+        0%   { transform: translateY(-8px); }
+        40%  { transform: translateY(-28px) scaleY(1.06) scaleX(0.95); }
+        100% { transform: translateY(-60px) scaleY(1.1); }
+      }
+      @keyframes sweat-a {
+        0%,100% { opacity:0; transform:translate(0,0) scale(0.4); }
+        25%     { opacity:1; transform:translate(-6px,-14px) scale(1); }
+        75%     { opacity:0; transform:translate(-9px,6px) scale(0.7); }
+      }
+      @keyframes sweat-b {
+        0%,100% { opacity:0; transform:translate(0,0) scale(0.4); }
+        35%     { opacity:1; transform:translate(7px,-16px) scale(1); }
+        80%     { opacity:0; transform:translate(10px,5px) scale(0.6); }
+      }
+      @keyframes sweat-c {
+        0%,100% { opacity:0; transform:translate(0,0) scale(0.4); }
+        45%     { opacity:1; transform:translate(-4px,-11px) scale(0.85); }
+        85%     { opacity:0; transform:translate(-7px,9px) scale(0.5); }
+      }
+      @keyframes effort-glow {
+        0%,100% { filter: drop-shadow(0 0 0px #22c55e00); }
+        50%     { filter: drop-shadow(0 0 12px #22c55e88); }
+      }
+    `}</style>
+
+    {/* Sweat drops – only while straining */}
+    {phase === "loading" && (<>
+      <span style={{ position:"absolute", top:8, left:2, fontSize:13, animation:"sweat-a 1.5s ease-in-out 0.1s infinite", opacity:0, pointerEvents:"none" }}>💧</span>
+      <span style={{ position:"absolute", top:4, right:0, fontSize:10, animation:"sweat-b 1.5s ease-in-out 0.5s infinite", opacity:0, pointerEvents:"none" }}>💧</span>
+      <span style={{ position:"absolute", top:18, left:-10, fontSize:9, animation:"sweat-c 1.7s ease-in-out 0.9s infinite", opacity:0, pointerEvents:"none" }}>💧</span>
+    </>)}
+
+    {/* Quokka body */}
+    <div style={{
+      animation: phase === "out"
+        ? "quokka-lunge 0.55s cubic-bezier(0.22,1,0.36,1) forwards"
+        : "quokka-strain 1.3s ease-in-out infinite",
+    }}>
+      <svg width="108" height="128" viewBox="0 0 108 128" fill="none" xmlns="http://www.w3.org/2000/svg"
+        style={{ animation: phase === "loading" ? "effort-glow 1.3s ease-in-out infinite" : "none" }}>
+
+        {/* Tail */}
+        <path d="M78 92 Q94 84 91 100 Q89 110 79 104" stroke="#22c55e" strokeWidth="7" strokeLinecap="round" fill="none"/>
+
+        {/* Body */}
+        <ellipse cx="52" cy="94" rx="24" ry="22" fill="#22c55e"/>
+        {/* Belly */}
+        <ellipse cx="52" cy="96" rx="14" ry="13" fill="#86efac" opacity="0.45"/>
+
+        {/* Left arm – raised, pushing up */}
+        <path d="M30 84 Q20 70 15 57" stroke="#22c55e" strokeWidth="11" strokeLinecap="round" fill="none"/>
+        {/* Right arm – raised, pushing up */}
+        <path d="M74 84 Q84 70 89 57" stroke="#22c55e" strokeWidth="11" strokeLinecap="round" fill="none"/>
+        {/* Hands (flat palms) */}
+        <ellipse cx="14" cy="54" rx="10" ry="6.5" fill="#22c55e" transform="rotate(-25 14 54)"/>
+        <ellipse cx="90" cy="54" rx="10" ry="6.5" fill="#22c55e" transform="rotate(25 90 54)"/>
+
+        {/* Left leg */}
+        <path d="M40 113 Q37 122 31 126" stroke="#22c55e" strokeWidth="10" strokeLinecap="round" fill="none"/>
+        {/* Right leg */}
+        <path d="M64 113 Q67 122 73 126" stroke="#22c55e" strokeWidth="10" strokeLinecap="round" fill="none"/>
+        {/* Feet */}
+        <ellipse cx="30" cy="127" rx="11" ry="5" fill="#22c55e"/>
+        <ellipse cx="73" cy="127" rx="11" ry="5" fill="#22c55e"/>
+
+        {/* Neck */}
+        <ellipse cx="52" cy="72" rx="11" ry="9" fill="#22c55e"/>
+
+        {/* Head */}
+        <circle cx="52" cy="50" r="26" fill="#22c55e"/>
+
+        {/* Left ear */}
+        <ellipse cx="31" cy="26" rx="11" ry="15" fill="#22c55e"/>
+        <ellipse cx="31" cy="26" rx="6.5" ry="10.5" fill="#86efac"/>
+        {/* Right ear */}
+        <ellipse cx="73" cy="26" rx="11" ry="15" fill="#22c55e"/>
+        <ellipse cx="73" cy="26" rx="6.5" ry="10.5" fill="#86efac"/>
+
+        {/* Nose */}
+        <ellipse cx="52" cy="57" rx="6.5" ry="5" fill="#16a34a"/>
+        <circle cx="49" cy="56" r="2.2" fill="#0a0f0d"/>
+        <circle cx="55" cy="56" r="2.2" fill="#0a0f0d"/>
+
+        {/* Eyes – squinting with effort */}
+        <circle cx="41" cy="44" r="5" fill="#0a0f0d"/>
+        <circle cx="63" cy="44" r="5" fill="#0a0f0d"/>
+        <circle cx="42.5" cy="42.5" r="2" fill="white"/>
+        <circle cx="64.5" cy="42.5" r="2" fill="white"/>
+
+        {/* Furrowed brows */}
+        <path d="M35 38 Q41 34.5 47 38" stroke="#0a0f0d" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
+        <path d="M57 38 Q63 34.5 69 38" stroke="#0a0f0d" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
+
+        {/* Grinning mouth */}
+        <path d="M43 62 Q52 69 61 62" stroke="#0a0f0d" strokeWidth="2.2" fill="none" strokeLinecap="round"/>
+
+        {/* Cheeks */}
+        <ellipse cx="35" cy="54" rx="7" ry="4" fill="#86efac" opacity="0.5"/>
+        <ellipse cx="69" cy="54" rx="7" ry="4" fill="#86efac" opacity="0.5"/>
+      </svg>
+    </div>
+  </div>
+);
+
 const PageLoader = ({ onDone }: { onDone: () => void }) => {
-  const [phase, setPhase] = useState<"in" | "hold" | "out">("in");
+  const [phase, setPhase] = useState<"loading" | "out">("loading");
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    // Animate progress bar 0 → 100 over ~1.2s
     const start = performance.now();
-    const duration = 1200;
+    const duration = 1400;
     const raf = (now: number) => {
       const p = Math.min((now - start) / duration, 1);
       setProgress(Math.round(p * 100));
       if (p < 1) requestAnimationFrame(raf);
       else {
         setPhase("out");
-        setTimeout(onDone, 600);
+        setTimeout(onDone, 750);
       }
     };
     const id = requestAnimationFrame(raf);
@@ -1545,30 +1658,23 @@ const PageLoader = ({ onDone }: { onDone: () => void }) => {
       background: "#0a0f0d",
       display: "flex", flexDirection: "column",
       alignItems: "center", justifyContent: "center",
-      transition: phase === "out" ? "opacity 0.55s ease, transform 0.55s ease" : "none",
-      opacity: phase === "out" ? 0 : 1,
-      transform: phase === "out" ? "scale(1.04)" : "scale(1)",
+      gap: 0,
+      overflow: "hidden",
+      transition: phase === "out" ? "transform 0.7s cubic-bezier(0.76,0,0.24,1)" : "none",
+      transform: phase === "out" ? "translateY(-100%)" : "translateY(0)",
       pointerEvents: phase === "out" ? "none" : "all",
     }}>
-      <style>{`
-        @keyframes loader-pulse { 0%,100% { transform:scale(1); opacity:1; } 50% { transform:scale(1.12); opacity:0.7; } }
-        @keyframes loader-bar   { from { width:0%; } }
-        @keyframes loader-dot   { 0%,80%,100% { transform:scale(0.6); opacity:0.3; } 40% { transform:scale(1); opacity:1; } }
-      `}</style>
 
-      {/* Logo */}
-      <div style={{ animation: "loader-pulse 1.4s ease-in-out infinite", marginBottom: 32 }}>
-        <Logo size={56} />
-      </div>
-
-      {/* Brand name */}
+      {/* Branding */}
+      <Logo size={52} />
       <div style={{
         fontFamily: "'Bricolage Grotesque', sans-serif", fontWeight: 800,
-        fontSize: 22, color: "#fff", letterSpacing: "-0.03em", marginBottom: 40,
+        fontSize: 20, color: "#fff", letterSpacing: "-0.03em",
+        marginTop: 10, marginBottom: 32,
       }}>Web Quokka</div>
 
       {/* Progress bar */}
-      <div style={{ width: 200, height: 3, background: "rgba(255,255,255,0.1)", borderRadius: 99, overflow: "hidden", marginBottom: 16 }}>
+      <div style={{ width: 200, height: 3, background: "rgba(255,255,255,0.1)", borderRadius: 99, overflow: "hidden", marginBottom: 10 }}>
         <div style={{
           height: "100%", borderRadius: 99,
           background: "linear-gradient(90deg, #22c55e, #86efac)",
@@ -1577,18 +1683,20 @@ const PageLoader = ({ onDone }: { onDone: () => void }) => {
           boxShadow: "0 0 10px #22c55e88",
         }} />
       </div>
+      <div style={{ fontSize: 12, color: "#4b5563", fontVariantNumeric: "tabular-nums", marginBottom: 40 }}>
+        {progress}%
+      </div>
 
-      {/* Percentage */}
-      <div style={{ fontSize: 12, color: "#4b5563", fontVariantNumeric: "tabular-nums" }}>{progress}%</div>
+      {/* Quokka */}
+      <QuokkaPushing phase={phase} />
 
-      {/* Bouncing dots */}
-      <div style={{ display: "flex", gap: 6, marginTop: 28 }}>
-        {[0, 1, 2].map(i => (
-          <div key={i} style={{
-            width: 6, height: 6, borderRadius: "50%", background: "#22c55e",
-            animation: `loader-dot 1.2s ease-in-out ${i * 0.2}s infinite`,
-          }} />
-        ))}
+      {/* Label */}
+      <div style={{
+        fontSize: 12, color: "#4b5563", marginTop: 10,
+        fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.05em",
+        transition: "opacity 0.3s",
+      }}>
+        {phase === "out" ? "here we go! 🚀" : "pushing your site..."}
       </div>
     </div>
   );
