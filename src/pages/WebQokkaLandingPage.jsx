@@ -3,8 +3,8 @@ import { useState, useEffect, useRef } from "react";
 /* ─────────────────────────────────────────────
    UTILITY: simple intersection-observer hook
 ───────────────────────────────────────────── */
-function useInView(threshold = 0.15): [React.RefObject<HTMLDivElement | null>, boolean] {
-  const ref = useRef<HTMLDivElement>(null);
+function useInView(threshold = 0.15) {
+  const ref = useRef(null);
   const [inView, setInView] = useState(false);
   useEffect(() => {
     const el = ref.current;
@@ -29,9 +29,9 @@ const GlobalStyles = () => (
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --green: #22c55e;
-      --green-light: #86efac;
-      --green-dark: #16a34a;
+      --brown: #c1773a;
+      --brown-light: #e8c49a;
+      --brown-dark: #8b4513;
       --ink: #0a0f0d;
       --ink-muted: #4b5563;
       --surface: #f8faf9;
@@ -57,12 +57,12 @@ const GlobalStyles = () => (
       letter-spacing: -0.02em;
     }
 
-    ::selection { background: #bbf7d0; color: var(--ink); }
+    ::selection { background: #f5dbb8; color: var(--ink); }
 
     /* Scroll bar */
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: var(--surface); }
-    ::-webkit-scrollbar-thumb { background: var(--green-light); border-radius: 99px; }
+    ::-webkit-scrollbar-thumb { background: var(--brown-light); border-radius: 99px; }
 
     /* Fade-up animation */
     .fade-up { opacity: 0; transform: translateY(32px); transition: opacity 0.65s ease, transform 0.65s ease; }
@@ -82,10 +82,10 @@ const GlobalStyles = () => (
     .pill {
       display: inline-flex; align-items: center; gap: 6px;
       padding: 6px 14px; border-radius: 99px;
-      background: #dcfce7; color: var(--green-dark);
+      background: #fde8d0; color: var(--brown-dark);
       font-size: 13px; font-weight: 500; letter-spacing: 0;
     }
-    .pill::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--green); display: block; }
+    .pill::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--brown); display: block; }
 
     /* CTA primary */
     .btn-primary {
@@ -111,17 +111,17 @@ const GlobalStyles = () => (
     }
     .btn-ghost:hover { border-color: var(--ink); background: #f1f5f2; transform: translateY(-2px); }
 
-    /* Green CTA */
-    .btn-green {
+    /* Brown CTA */
+    .btn-brown {
       display: inline-flex; align-items: center; gap: 8px;
       padding: 14px 28px; border-radius: 99px;
-      background: var(--green); color: #fff;
+      background: var(--brown); color: #fff;
       font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600;
       border: none; cursor: pointer;
       transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
       text-decoration: none;
     }
-    .btn-green:hover { background: var(--green-dark); transform: translateY(-2px); box-shadow: 0 12px 32px rgba(34,197,94,0.35); }
+    .btn-brown:hover { background: var(--brown-dark); transform: translateY(-2px); box-shadow: 0 12px 32px rgba(194,119,58,0.35); }
 
     /* Input */
     .form-input {
@@ -130,7 +130,7 @@ const GlobalStyles = () => (
       font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--ink);
       outline: none; transition: border-color 0.2s, box-shadow 0.2s;
     }
-    .form-input:focus { border-color: var(--green); box-shadow: 0 0 0 3px #dcfce7; }
+    .form-input:focus { border-color: var(--brown); box-shadow: 0 0 0 3px #fde8d0; }
     .form-input::placeholder { color: #9ca3af; }
 
     /* Nav link */
@@ -141,10 +141,18 @@ const GlobalStyles = () => (
     }
     .nav-link::after {
       content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1.5px;
-      background: var(--green); border-radius: 99px; transition: width 0.25s;
+      background: var(--brown); border-radius: 99px; transition: width 0.25s;
     }
     .nav-link:hover { color: var(--ink); }
     .nav-link:hover::after { width: 100%; }
+
+    /* Marquee ticker */
+    @keyframes marquee-ltr { from { transform: translateX(-50%); } to { transform: translateX(0%); } }
+    @keyframes marquee-rtl { from { transform: translateX(0%); } to { transform: translateX(-50%); } }
+    .marquee-track { overflow: hidden; width: 100%; }
+    .marquee-inner { display: flex; width: max-content; }
+    .marquee-ltr  .marquee-inner { animation: marquee-ltr 18s linear infinite; }
+    .marquee-rtl  .marquee-inner { animation: marquee-rtl 18s linear infinite; }
 
     /* Section wrapper */
     .section { padding: 96px 24px; max-width: 1180px; margin: 0 auto; }
@@ -162,20 +170,19 @@ const GlobalStyles = () => (
 ───────────────────────────────────────────── */
 const Logo = ({ size = 32 }) => (
   <div style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
-    {/* Quokka face SVG mascot */}
     <svg width={size} height={size} viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect width="40" height="40" rx="12" fill="#0a0f0d"/>
-      <ellipse cx="20" cy="22" rx="11" ry="10" fill="#22c55e"/>
-      <ellipse cx="15" cy="15" rx="5" ry="6" fill="#22c55e"/>
-      <ellipse cx="25" cy="15" rx="5" ry="6" fill="#22c55e"/>
+      <ellipse cx="20" cy="22" rx="11" ry="10" fill="#c2773a"/>
+      <ellipse cx="15" cy="15" rx="5" ry="6" fill="#c2773a"/>
+      <ellipse cx="25" cy="15" rx="5" ry="6" fill="#c2773a"/>
       <ellipse cx="15" cy="15" rx="3" ry="4" fill="#0a0f0d"/>
       <ellipse cx="25" cy="15" rx="3" ry="4" fill="#0a0f0d"/>
       <circle cx="20" cy="23" r="4" fill="#0a0f0d"/>
       <circle cx="18.5" cy="22.5" r="1.5" fill="white"/>
       <circle cx="21.5" cy="22.5" r="1.5" fill="white"/>
       <path d="M17 26 Q20 28.5 23 26" stroke="#0a0f0d" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
-      <circle cx="14" cy="18" r="2.5" fill="#86efac"/>
-      <circle cx="26" cy="18" r="2.5" fill="#86efac"/>
+      <circle cx="14" cy="18" r="2.5" fill="#e8c49a"/>
+      <circle cx="26" cy="18" r="2.5" fill="#e8c49a"/>
     </svg>
     <span style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontWeight: 700, fontSize: size * 0.56, letterSpacing: "-0.03em", color: "#0a0f0d" }}>
       Web Quokka
@@ -186,28 +193,25 @@ const Logo = ({ size = 32 }) => (
 /* ─────────────────────────────────────────────
    NAVBAR
 ───────────────────────────────────────────── */
-type NavAnim = { id: number; x: number; y: number; label: string; dx: number; dy: number };
-
 const NAV_ANIMS = [
-  { dx: 0,   dy: -60 },  // up
-  { dx: 0,   dy:  60 },  // down
-  { dx: -60, dy:   0 },  // left
-  { dx:  60, dy:   0 },  // right
-  { dx: -50, dy: -50 },  // up-left
-  { dx:  50, dy: -50 },  // up-right
-  { dx: -50, dy:  50 },  // down-left
-  { dx:  50, dy:  50 },  // down-right
+  { dx: 0,   dy: -60 },
+  { dx: 0,   dy:  60 },
+  { dx: -60, dy:   0 },
+  { dx:  60, dy:   0 },
+  { dx: -50, dy: -50 },
+  { dx:  50, dy: -50 },
+  { dx: -50, dy:  50 },
+  { dx:  50, dy:  50 },
 ];
 
-const SLIDE_DIRS = ['left', 'right', 'top', 'bottom'] as const;
-type SlideDir = typeof SLIDE_DIRS[number];
+const SLIDE_DIRS = ['left', 'right', 'top', 'bottom'];
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const [particles, setParticles] = useState<NavAnim[]>([]);
+  const [particles, setParticles] = useState([]);
   const [loaded, setLoaded] = useState(false);
-  const [overlay, setOverlay] = useState<{ dir: SlideDir; phase: 'enter' | 'exit' } | null>(null);
+  const [overlay, setOverlay] = useState(null);
   const pidRef = useRef(0);
 
   useEffect(() => {
@@ -221,13 +225,13 @@ const Navbar = () => {
     return () => clearTimeout(t);
   }, []);
 
-  const spawnParticles = (e: React.MouseEvent<HTMLAnchorElement>, label: string) => {
+  const spawnParticles = (e, label) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const cx = rect.left + rect.width / 2;
     const cy = rect.top + rect.height / 2;
     const count = 4 + Math.floor(Math.random() * 3);
     const shuffled = [...NAV_ANIMS].sort(() => Math.random() - 0.5).slice(0, count);
-    const newParticles: NavAnim[] = shuffled.map(({ dx, dy }) => ({
+    const newParticles = shuffled.map(({ dx, dy }) => ({
       id: ++pidRef.current,
       x: cx, y: cy, label,
       dx: dx + (Math.random() - 0.5) * 20,
@@ -239,7 +243,7 @@ const Navbar = () => {
     }, 700);
   };
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string, label: string) => {
+  const handleNavClick = (e, href, label) => {
     e.preventDefault();
     spawnParticles(e, label);
     const dir = SLIDE_DIRS[Math.floor(Math.random() * SLIDE_DIRS.length)];
@@ -256,7 +260,7 @@ const Navbar = () => {
   const links = [
     { label: "Services", href: "#services" },
     { label: "Process", href: "#process" },
-    { label: "Portfolio", href: "#portfolio" },
+    // { label: "Portfolio", href: "#portfolio" },
     { label: "Pricing", href: "#pricing" },
     { label: "Blog", href: "#blog" },
     { label: "Contact", href: "#contact" },
@@ -272,12 +276,12 @@ const Navbar = () => {
           left: pt.x, top: pt.y,
           transform: "translate(-50%, -50%)",
           fontSize: 11, fontWeight: 700,
-          color: "#22c55e",
+          color: "#c2773a",
           fontFamily: "'Bricolage Grotesque', sans-serif",
           animation: `navpop-${pt.id % 8} 0.65s ease-out forwards`,
           "--dx": `${pt.dx}px`,
           "--dy": `${pt.dy}px`,
-        } as React.CSSProperties}>
+        }}>
           {pt.label}
         </span>
       ))}
@@ -298,7 +302,7 @@ const Navbar = () => {
     {overlay && (
       <div style={{
         position: 'fixed', inset: 0, zIndex: 8999,
-        background: 'linear-gradient(135deg, #0a0f0d 0%, #16a34a 100%)',
+        background: 'linear-gradient(135deg, #0a0f0d 0%, #8b4513 100%)',
         animation: `ov-${overlay.phase}-${overlay.dir} 0.42s cubic-bezier(0.76,0,0.24,1) forwards`,
         pointerEvents: 'none',
       }} />
@@ -336,7 +340,7 @@ const Navbar = () => {
         opacity: loaded ? 1 : 0,
         animation: loaded ? `nav-fade-in 0.5s cubic-bezier(0.22,1,0.36,1) ${0.1 + links.length * 0.07}s both` : "none",
       }}>
-        <a href="#contact" className="btn-green" style={{ padding: "11px 22px", fontSize: 14 }}>
+        <a href="#contact" className="btn-brown" style={{ padding: "11px 22px", fontSize: 14 }}>
           Get a Free Quote ↗
         </a>
       </div>
@@ -368,7 +372,7 @@ const Navbar = () => {
               {l.label}
             </a>
           ))}
-          <a href="#contact" className="btn-green" style={{ marginTop: 16, width: "100%", justifyContent: "center" }}
+          <a href="#contact" className="btn-brown" style={{ marginTop: 16, width: "100%", justifyContent: "center" }}
             onClick={() => setOpen(false)}>
             Get a Free Quote
           </a>
@@ -406,11 +410,11 @@ const BrowserMock = () => (
         <div style={{ width: 80, height: 10, background: "#0a0f0d", borderRadius: 99 }} />
         <div style={{ display: "flex", gap: 16 }}>
           {[50,40,50].map((w,i) => <div key={i} style={{ width: w, height: 8, background: "#e5e7eb", borderRadius: 99 }} />)}
-          <div style={{ width: 64, height: 28, background: "#22c55e", borderRadius: 99 }} />
+          <div style={{ width: 64, height: 28, background: "#c2773a", borderRadius: 99 }} />
         </div>
       </div>
       {/* Hero area */}
-      <div style={{ background: "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)", borderRadius: 16, padding: "28px 24px", marginBottom: 20 }}>
+      <div style={{ background: "linear-gradient(135deg, #fdf5ec 0%, #fde8d0 100%)", borderRadius: 16, padding: "28px 24px", marginBottom: 20 }}>
         <div style={{ width: "60%", height: 14, background: "#0a0f0d", borderRadius: 99, marginBottom: 10 }} />
         <div style={{ width: "80%", height: 10, background: "#4b5563", borderRadius: 99, marginBottom: 6, opacity: 0.5 }} />
         <div style={{ width: "65%", height: 10, background: "#4b5563", borderRadius: 99, marginBottom: 20, opacity: 0.4 }} />
@@ -422,7 +426,7 @@ const BrowserMock = () => (
       {/* Cards row */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
         {[
-          { c: "#f0fdf4", label: "Web Design" },
+          { c: "#fdf5ec", label: "Web Design" },
           { c: "#fef9c3", label: "E-commerce" },
           { c: "#eff6ff", label: "Mobile App" },
         ].map((card) => (
@@ -446,18 +450,18 @@ const Hero = () => {
   return (
     <section id="hero" style={{
       minHeight: "100vh", display: "flex", alignItems: "center",
-      background: "linear-gradient(160deg, #f8faf9 0%, #f0fdf4 50%, #f8faf9 100%)",
+      background: "linear-gradient(160deg, #f8faf9 0%, #fdf5ec 50%, #f8faf9 100%)",
       position: "relative", overflow: "hidden", paddingTop: 80,
     }} ref={ref}>
       {/* Background decoration */}
       <div style={{
         position: "absolute", top: -200, right: -200, width: 600, height: 600,
-        borderRadius: "50%", background: "radial-gradient(circle, #dcfce7 0%, transparent 70%)",
+        borderRadius: "50%", background: "radial-gradient(circle, #fde8d0 0%, transparent 70%)",
         opacity: 0.6, pointerEvents: "none",
       }} />
       <div style={{
         position: "absolute", bottom: -100, left: -100, width: 400, height: 400,
-        borderRadius: "50%", background: "radial-gradient(circle, #bbf7d0 0%, transparent 70%)",
+        borderRadius: "50%", background: "radial-gradient(circle, #f5dbb8 0%, transparent 70%)",
         opacity: 0.4, pointerEvents: "none",
       }} />
 
@@ -476,10 +480,10 @@ const Hero = () => {
             marginBottom: 24, color: "#0a0f0d",
           }}>
             Every business deserves a{" "}
-            <span style={{ color: "#22c55e", position: "relative" }}>
+            <span style={{ color: "#c2773a", position: "relative" }}>
               website
               <svg style={{ position: "absolute", bottom: -6, left: 0, width: "100%", height: 8 }} viewBox="0 0 200 8" preserveAspectRatio="none">
-                <path d="M0 6 Q100 0 200 6" stroke="#86efac" strokeWidth="3" fill="none" strokeLinecap="round"/>
+                <path d="M0 6 Q100 0 200 6" stroke="#e8c49a" strokeWidth="3" fill="none" strokeLinecap="round"/>
               </svg>
             </span>{" "}
             that works.
@@ -490,7 +494,7 @@ const Hero = () => {
             We build affordable, high-quality websites and apps for small businesses — so you can focus on what you do best. No bloat, no jargon, no surprises.
           </p>
           <div className={`fade-up${inView ? " visible" : ""} d4`} style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
-            <a href="#contact" className="btn-green">Start Your Project →</a>
+            <a href="#contact" className="btn-brown">Start Your Project →</a>
             <a href="#services" className="btn-ghost">View Services</a>
           </div>
           <div className={`fade-up${inView ? " visible" : ""} d5`} style={{ marginTop: 48, display: "flex", gap: 32 }}>
@@ -523,7 +527,7 @@ const services = [
     title: "Website Design & Development",
     desc: "Beautiful, fast, and SEO-friendly websites tailored to your brand. From landing pages to complex multi-page sites.",
     tag: "Most Popular",
-    bg: "#f0fdf4",
+    bg: "#fdf5ec",
   },
   {
     icon: "🛍️",
@@ -551,9 +555,9 @@ const services = [
   },
   {
     icon: "☁️",
-    title: "Hosting & Backend (Firebase)",
+    title: "Hosting & Backend",
     desc: "Fast, reliable, and scalable hosting powered by Firebase. We handle the infrastructure so you don't have to.",
-    bg: "#f0fdf4",
+    bg: "#fdf5ec",
   },
 ];
 
@@ -567,7 +571,7 @@ const Services = () => {
         <div style={{ textAlign: "center", marginBottom: 64 }}>
           <div className={`fade-up${inView ? " visible" : ""}`}><span className="pill">What we do</span></div>
           <h2 className={`fade-up${inView ? " visible" : ""} d1`} style={{ fontSize: "clamp(32px, 4vw, 52px)", fontWeight: 800, marginTop: 16, marginBottom: 16 }}>
-            Services built for <span style={{ color: "#22c55e" }}>real businesses</span>
+            Services built for <span style={{ color: "#c2773a" }}>real businesses</span>
           </h2>
           <p className={`fade-up${inView ? " visible" : ""} d2`} style={{ color: "#4b5563", fontSize: 17, maxWidth: 520, margin: "0 auto" }}>
             Everything you need to get online — and stay ahead. We're a one-stop shop for your digital journey.
@@ -598,7 +602,7 @@ const Services = () => {
               <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 10, lineHeight: 1.3 }}>{s.title}</h3>
               <p style={{ fontSize: 14.5, color: "#4b5563", lineHeight: 1.65 }}>{s.desc}</p>
               <div style={{ marginTop: 24 }}>
-                <a href="#contact" style={{ fontSize: 13, fontWeight: 600, color: "#22c55e", textDecoration: "none" }}>
+                <a href="#contact" style={{ fontSize: 13, fontWeight: 600, color: "#c2773a", textDecoration: "none" }}>
                   Learn more →
                 </a>
               </div>
@@ -636,6 +640,25 @@ const whyUs = [
   },
 ];
 
+
+const WhyUsCard = ({ w, index }) => {
+  const [ref, inView] = useInView(0.3);
+  const fromLeft = index % 2 === 0;
+  return (
+    <div ref={ref} style={{
+      background: "rgba(255,255,255,0.05)", borderRadius: 20, padding: "28px 24px",
+      border: "1px solid rgba(255,255,255,0.08)", backdropFilter: "blur(8px)",
+      opacity: inView ? 1 : 0,
+      transform: inView ? "translateX(0)" : `translateX(${fromLeft ? "-80px" : "80px"})`,
+      transition: `opacity 1s ease ${index * 0.4}s, transform 1s cubic-bezier(0.22,1,0.36,1) ${index * 0.4}s`,
+    }}>
+      <div style={{ fontSize: 32, marginBottom: 16 }}>{w.icon}</div>
+      <h3 style={{ fontSize: 17, fontWeight: 700, color: "#fff", marginBottom: 10 }}>{w.title}</h3>
+      <p style={{ fontSize: 14, color: "#9ca3af", lineHeight: 1.65 }}>{w.desc}</p>
+    </div>
+  );
+};
+
 const WhyUs = () => {
   const [ref, inView] = useInView();
 
@@ -649,23 +672,39 @@ const WhyUs = () => {
           {/* Decorative blob */}
           <div style={{
             position: "absolute", top: -80, right: -80, width: 300, height: 300,
-            borderRadius: "50%", background: "radial-gradient(circle, #22c55e40, transparent 70%)",
+            borderRadius: "50%", background: "radial-gradient(circle, #c2773a40, transparent 70%)",
           }} />
           <div style={{
             position: "absolute", bottom: -60, left: -60, width: 200, height: 200,
-            borderRadius: "50%", background: "radial-gradient(circle, #22c55e30, transparent 70%)",
+            borderRadius: "50%", background: "radial-gradient(circle, #c2773a30, transparent 70%)",
           }} />
 
           <div style={{ textAlign: "center", marginBottom: 64, position: "relative" }}>
             <div className={`fade-up${inView ? " visible" : ""}`}>
-              <span className="pill" style={{ background: "#1a2e24", color: "#86efac" }}>Why Web Quokka</span>
+              <span className="pill" style={{ background: "#1a2e24", color: "#e8c49a" }}>Why Web Quokka</span>
             </div>
-            <h2 className={`fade-up${inView ? " visible" : ""} d1`} style={{
-              fontSize: "clamp(28px, 3.5vw, 46px)", fontWeight: 800, color: "#fff",
-              marginTop: 16, marginBottom: 12,
-            }}>
-              Built different. <span style={{ color: "#22c55e" }}>On purpose.</span>
-            </h2>
+            <div className={`fade-up${inView ? " visible" : ""} d1`} style={{ marginTop: 16, marginBottom: 12, overflow: "hidden" }}>
+              {/* Row 1 — slides left to right */}
+              <div className="marquee-track marquee-ltr" style={{ marginBottom: 6 }}>
+                <div className="marquee-inner">
+                  {Array.from({ length: 8 }).map((_, i) => (
+                    <span key={i} style={{ fontSize: "clamp(28px, 3.5vw, 46px)", fontWeight: 800, color: "#fff", whiteSpace: "nowrap", paddingRight: "clamp(24px, 4vw, 60px)" }}>
+                      Built different. <span style={{ color: "#c2773a" }}>✦</span>
+                    </span>
+                  ))}
+                </div>
+              </div>
+              {/* Row 2 — slides right to left */}
+              <div className="marquee-track marquee-rtl">
+                <div className="marquee-inner">
+                  {Array.from({ length: 8 }).map((_, i) => (
+                    <span key={i} style={{ fontSize: "clamp(28px, 3.5vw, 46px)", fontWeight: 800, whiteSpace: "nowrap", paddingRight: "clamp(24px, 4vw, 60px)" }}>
+                      <span style={{ color: "#c2773a" }}>On purpose.</span> <span style={{ color: "rgba(255,255,255,0.2)" }}>✦</span>
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
             <p className={`fade-up${inView ? " visible" : ""} d2`} style={{ color: "#9ca3af", fontSize: 16, maxWidth: 480, margin: "0 auto" }}>
               We obsess over the details so you can focus on running your business.
             </p>
@@ -673,18 +712,7 @@ const WhyUs = () => {
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 20 }}>
             {whyUs.map((w, i) => (
-              <div
-                key={w.title}
-                className={`card-lift fade-up${inView ? " visible" : ""} d${i + 1}`}
-                style={{
-                  background: "rgba(255,255,255,0.05)", borderRadius: 20, padding: "28px 24px",
-                  border: "1px solid rgba(255,255,255,0.08)", backdropFilter: "blur(8px)",
-                }}
-              >
-                <div style={{ fontSize: 32, marginBottom: 16 }}>{w.icon}</div>
-                <h3 style={{ fontSize: 17, fontWeight: 700, color: "#fff", marginBottom: 10 }}>{w.title}</h3>
-                <p style={{ fontSize: 14, color: "#9ca3af", lineHeight: 1.65 }}>{w.desc}</p>
-              </div>
+              <WhyUsCard key={w.title} w={w} index={i} />
             ))}
           </div>
         </div>
@@ -714,7 +742,7 @@ const Process = () => {
         <div style={{ textAlign: "center", marginBottom: 64 }}>
           <div className={`fade-up${inView ? " visible" : ""}`}><span className="pill">How it works</span></div>
           <h2 className={`fade-up${inView ? " visible" : ""} d1`} style={{ fontSize: "clamp(28px, 3.5vw, 48px)", fontWeight: 800, marginTop: 16, marginBottom: 12 }}>
-            Simple process, <span style={{ color: "#22c55e" }}>real results</span>
+            Simple process, <span style={{ color: "#c2773a" }}>real results</span>
           </h2>
           <p className={`fade-up${inView ? " visible" : ""} d2`} style={{ color: "#4b5563", fontSize: 16, maxWidth: 460, margin: "0 auto" }}>
             Five clear steps from idea to a live, thriving digital presence.
@@ -731,15 +759,15 @@ const Process = () => {
                 key={s.num}
                 onClick={() => setActive(i)}
                 style={{
-                  textAlign: "left", background: active === i ? "#f0fdf4" : "transparent",
-                  border: active === i ? "1.5px solid #86efac" : "1.5px solid transparent",
+                  textAlign: "left", background: active === i ? "#fdf5ec" : "transparent",
+                  border: active === i ? "1.5px solid #e8c49a" : "1.5px solid transparent",
                   borderRadius: 16, padding: "20px 24px", cursor: "pointer",
                   transition: "all 0.25s", display: "flex", alignItems: "center", gap: 20,
                 }}
               >
                 <span style={{
                   width: 44, height: 44, borderRadius: 12, flexShrink: 0,
-                  background: active === i ? "#22c55e" : "#f3f4f6",
+                  background: active === i ? "#c2773a" : "#f3f4f6",
                   color: active === i ? "#fff" : "#9ca3af",
                   display: "flex", alignItems: "center", justifyContent: "center",
                   fontFamily: "'Bricolage Grotesque', sans-serif", fontWeight: 700, fontSize: 13,
@@ -757,7 +785,7 @@ const Process = () => {
 
           {/* Visual */}
           <div className="hide-mobile" style={{
-            background: "linear-gradient(135deg, #f0fdf4, #dcfce7)",
+            background: "linear-gradient(135deg, #fdf5ec, #fde8d0)",
             borderRadius: 28, padding: 48, display: "flex", flexDirection: "column",
             alignItems: "center", justifyContent: "center", minHeight: 380, textAlign: "center",
           }}>
@@ -784,15 +812,15 @@ const Process = () => {
 ───────────────────────────────────────────── */
 const teamMembers = [
   {
-    name: "Alex Carter",
+    name: "Ramdev Shrestha",
     role: "Lead Developer",
     avatar: "AC",
-    avatarBg: "#22c55e",
-    bio: "Full-stack engineer with 8+ years building fast, scalable web apps. Obsessed with clean code and performance.",
-    skills: ["React", "Node.js", "AWS"],
+    avatarBg: "#c2773a",
+    bio: "Full-stack engineer with 3+ years building fast, scalable web apps. Obsessed with clean code and performance.",
+    skills: ["React", "Node.js", "AWS", "UI/UX"],
   },
   {
-    name: "Maya Patel",
+    name: "Alex Carter",
     role: "UX & Design Lead",
     avatar: "MP",
     avatarBg: "#a855f7",
@@ -809,6 +837,41 @@ const teamMembers = [
   },
 ];
 
+const TeamCard = ({ m, index }) => {
+  const [ref, inView] = useInView(0.3);
+  return (
+    <div ref={ref} style={{
+      background: "#fff", borderRadius: 24, padding: "36px 28px",
+      border: "1px solid #e5e7eb", textAlign: "center",
+      opacity: inView ? 1 : 0,
+      transform: inView ? "translateX(0)" : "translateX(80px)",
+      transition: `opacity 1s ease ${index * 0.4}s, transform 1s cubic-bezier(0.22,1,0.36,1) ${index * 0.4}s`,
+    }}
+      onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 8px 32px rgba(194,119,58,0.12)"; e.currentTarget.style.transform = "translateY(-4px)"; }}
+      onMouseLeave={e => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.transform = "translateX(0)"; }}
+    >
+      <div style={{
+        width: 72, height: 72, borderRadius: "50%",
+        background: m.avatarBg, color: "#fff",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        fontFamily: "'Bricolage Grotesque', sans-serif", fontWeight: 700, fontSize: 20,
+        margin: "0 auto 16px",
+      }}>{m.avatar}</div>
+      <div style={{ fontWeight: 700, fontSize: 18, color: "#0a0f0d", marginBottom: 4 }}>{m.name}</div>
+      <div style={{ fontSize: 13, color: m.avatarBg, fontWeight: 600, marginBottom: 14 }}>{m.role}</div>
+      <p style={{ fontSize: 14, color: "#4b5563", lineHeight: 1.65, marginBottom: 20 }}>{m.bio}</p>
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center" }}>
+        {m.skills.map(skill => (
+          <span key={skill} style={{
+            background: "#fdf5ec", color: "#8b4513", borderRadius: 8,
+            padding: "4px 12px", fontSize: 12, fontWeight: 600,
+          }}>{skill}</span>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 const Team = () => {
   const [ref, inView] = useInView();
   return (
@@ -817,46 +880,16 @@ const Team = () => {
         <div style={{ textAlign: "center", marginBottom: 56 }}>
           <div className={`fade-up${inView ? " visible" : ""}`}><span className="pill">Our team</span></div>
           <h2 className={`fade-up${inView ? " visible" : ""} d1`} style={{ fontSize: "clamp(28px, 3.5vw, 48px)", fontWeight: 800, marginTop: 16, marginBottom: 12 }}>
-            The people behind <span style={{ color: "#22c55e" }}>your success</span>
+            The people behind <span style={{ color: "#c2773a" }}>your success</span>
           </h2>
           <p className={`fade-up${inView ? " visible" : ""} d2`} style={{ color: "#4b5563", fontSize: 16, maxWidth: 460, margin: "0 auto" }}>
             A small, focused team that cares deeply about delivering results for every client.
           </p>
         </div>
 
-        <div className={`fade-up${inView ? " visible" : ""} d2`} style={{
-          display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 28,
-        }}>
-          {teamMembers.map((m) => (
-            <div key={m.name} style={{
-              background: "#fff", borderRadius: 24, padding: "36px 28px",
-              border: "1px solid #e5e7eb", textAlign: "center",
-              transition: "box-shadow 0.25s, transform 0.25s",
-            }}
-              onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = "0 8px 32px rgba(34,197,94,0.12)"; (e.currentTarget as HTMLDivElement).style.transform = "translateY(-4px)"; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = "none"; (e.currentTarget as HTMLDivElement).style.transform = "none"; }}
-            >
-              <div style={{
-                width: 72, height: 72, borderRadius: "50%",
-                background: m.avatarBg, color: "#fff",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                fontFamily: "'Bricolage Grotesque', sans-serif", fontWeight: 700, fontSize: 20,
-                margin: "0 auto 16px",
-              }}>
-                {m.avatar}
-              </div>
-              <div style={{ fontWeight: 700, fontSize: 18, color: "#0a0f0d", marginBottom: 4 }}>{m.name}</div>
-              <div style={{ fontSize: 13, color: m.avatarBg, fontWeight: 600, marginBottom: 14 }}>{m.role}</div>
-              <p style={{ fontSize: 14, color: "#4b5563", lineHeight: 1.65, marginBottom: 20 }}>{m.bio}</p>
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center" }}>
-                {m.skills.map(skill => (
-                  <span key={skill} style={{
-                    background: "#f0fdf4", color: "#16a34a", borderRadius: 8,
-                    padding: "4px 12px", fontSize: 12, fontWeight: 600,
-                  }}>{skill}</span>
-                ))}
-              </div>
-            </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 28 }}>
+          {teamMembers.map((m, i) => (
+            <TeamCard key={m.name} m={m} index={i} />
           ))}
         </div>
       </div>
@@ -891,8 +924,8 @@ const testimonials = [
     name: "Priya Nair",
     role: "CEO, NairFit Studio",
     avatar: "PN",
-    color: "#f0fdf4",
-    avatarBg: "#22c55e",
+    color: "#fdf5ec",
+    avatarBg: "#c2773a",
     text: "Our booking app is slick, fast, and our clients love it. The ongoing support has been incredible — they're always there when we need them.",
     stars: 5,
   },
@@ -916,7 +949,7 @@ const Testimonials = () => {
         <div style={{ textAlign: "center", marginBottom: 64 }}>
           <div className={`fade-up${inView ? " visible" : ""}`}><span className="pill">Client Stories</span></div>
           <h2 className={`fade-up${inView ? " visible" : ""} d1`} style={{ fontSize: "clamp(28px, 3.5vw, 48px)", fontWeight: 800, marginTop: 16, marginBottom: 12 }}>
-            Trusted by small businesses <span style={{ color: "#22c55e" }}>everywhere</span>
+            Trusted by small businesses <span style={{ color: "#c2773a" }}>everywhere</span>
           </h2>
         </div>
 
@@ -964,11 +997,11 @@ const Testimonials = () => {
 const Contact = () => {
   const [ref, inView] = useInView();
   const [form, setForm] = useState({ name: "", business: "", email: "", phone: "", service: "", message: "" });
-  const [status, setStatus] = useState("idle"); // idle | loading | success | error
+  const [status, setStatus] = useState("idle");
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => setForm(f => ({ ...f, [e.target.name]: e.target.value }));
+  const handleChange = (e) => setForm(f => ({ ...f, [e.target.name]: e.target.value }));
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus("loading");
     // ── Firebase / backend integration point ──
@@ -987,7 +1020,7 @@ const Contact = () => {
           <div>
             <div className={`fade-up${inView ? " visible" : ""}`}><span className="pill">Get in touch</span></div>
             <h2 className={`fade-up${inView ? " visible" : ""} d1`} style={{ fontSize: "clamp(28px, 3vw, 44px)", fontWeight: 800, marginTop: 16, marginBottom: 16, lineHeight: 1.1 }}>
-              Let's build something <span style={{ color: "#22c55e" }}>great together.</span>
+              Let's build something <span style={{ color: "#c2773a" }}>great together.</span>
             </h2>
             <p className={`fade-up${inView ? " visible" : ""} d2`} style={{ color: "#4b5563", fontSize: 16, lineHeight: 1.7, marginBottom: 40 }}>
               Tell us about your project and we'll get back to you within 24 hours with a free, no-obligation quote.
@@ -996,12 +1029,12 @@ const Contact = () => {
             {/* Contact points */}
             <div className={`fade-up${inView ? " visible" : ""} d3`} style={{ display: "flex", flexDirection: "column", gap: 20 }}>
               {[
-                { icon: "📧", label: "Email", value: "hello@webquokka.com.au" },
-                { icon: "📍", label: "Based in", value: "Wollongong, NSW, Australia" },
+                { icon: "📧", label: "Email", value: "quokkasupport@gmail.com" },
+                { icon: "📍", label: "Based in", value: "Hurstville, NSW, Australia" },
                 { icon: "⏱️", label: "Response time", value: "Within 24 hours" },
               ].map(c => (
                 <div key={c.label} style={{ display: "flex", gap: 16, alignItems: "center" }}>
-                  <div style={{ width: 44, height: 44, borderRadius: 12, background: "#f0fdf4", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0 }}>
+                  <div style={{ width: 44, height: 44, borderRadius: 12, background: "#fdf5ec", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0 }}>
                     {c.icon}
                   </div>
                   <div>
@@ -1017,8 +1050,8 @@ const Contact = () => {
           <div className={`fade-up${inView ? " visible" : ""} d2`}>
             {status === "success" ? (
               <div style={{
-                background: "#f0fdf4", borderRadius: 24, padding: "64px 40px",
-                textAlign: "center", border: "1.5px solid #86efac",
+                background: "#fdf5ec", borderRadius: 24, padding: "64px 40px",
+                textAlign: "center", border: "1.5px solid #e8c49a",
               }}>
                 <div style={{ fontSize: 64, marginBottom: 20 }}>🎉</div>
                 <h3 style={{ fontSize: 24, fontWeight: 700, marginBottom: 12 }}>Message received!</h3>
@@ -1088,7 +1121,7 @@ const Contact = () => {
                     style={{ resize: "vertical" }}
                   />
                 </div>
-                <button type="submit" className="btn-green" style={{ width: "100%", justifyContent: "center", opacity: status === "loading" ? 0.75 : 1 }} disabled={status === "loading"}>
+                <button type="submit" className="btn-brown" style={{ width: "100%", justifyContent: "center", opacity: status === "loading" ? 0.75 : 1 }} disabled={status === "loading"}>
                   {status === "loading" ? "Sending…" : "Send Message →"}
                 </button>
                 <p style={{ fontSize: 12, color: "#9ca3af", textAlign: "center", marginTop: 14 }}>
@@ -1108,116 +1141,251 @@ const Contact = () => {
 /* ─────────────────────────────────────────────
    PRICING SECTION
 ───────────────────────────────────────────── */
-const plans = [
-  {
-    name: "Starter",
-    price: "$999",
-    period: "one-time",
-    desc: "Perfect for small businesses needing a clean online presence fast.",
-    color: "#f9fafb",
-    border: "#e5e7eb",
-    badge: null,
-    features: [
-      "Up to 5 pages",
-      "Mobile-responsive design",
-      "Contact form",
-      "Basic SEO setup",
-      "1 round of revisions",
-      "14-day delivery",
-    ],
-    cta: "Get Started",
-    ctaStyle: "btn-ghost",
-  },
-  {
-    name: "Growth",
-    price: "$2,499",
-    period: "one-time",
-    desc: "For growing businesses that need more features and a stronger online presence.",
-    color: "#0a0f0d",
-    border: "#0a0f0d",
-    badge: "Most Popular",
-    features: [
-      "Up to 12 pages",
-      "Custom UI design",
-      "CMS / blog integration",
-      "Google Analytics setup",
-      "On-page SEO",
-      "3 rounds of revisions",
-      "21-day delivery",
-    ],
-    cta: "Get Started",
-    ctaStyle: "btn-green",
-  },
-  {
-    name: "Pro",
-    price: "Custom",
-    period: "project",
-    desc: "Fully custom web apps, e-commerce, or complex integrations — scoped to your needs.",
-    color: "#f9fafb",
-    border: "#e5e7eb",
-    badge: null,
-    features: [
-      "Unlimited pages",
-      "E-commerce / web app",
-      "Custom integrations & APIs",
-      "Advanced SEO strategy",
-      "Priority support",
-      "Ongoing maintenance",
-      "Dedicated project manager",
-    ],
-    cta: "Talk to Us",
-    ctaStyle: "btn-primary",
-  },
-];
+const pricingTabs = ["Website", "E-Commerce", "Web App", "Mobile App", "Maintenance"];
+
+const pricingPlans = {
+  "Website": [
+    {
+      name: "Starter Package",
+      price: "$699",
+      period: "one-time",
+      badge: null,
+      features: ["Up to 5 pages", "Mobile-responsive design", "Contact form", "Basic SEO setup", "1 round of revisions", "14-day delivery", "Firebase hosting setup"],
+      cta: "Get Started",
+    },
+    {
+      name: "Growth Package",
+      price: "$1199",
+      period: "one-time",
+      badge: "Most Popular",
+      features: ["Up to 12 pages", "Custom UI/UX design", "CMS / blog integration", "Google Analytics setup", "On-page SEO", "3 rounds of revisions", "21-day delivery"],
+      cta: "Get Started",
+    },
+    {
+      name: "Pro Package",
+      price: "Custom",
+      period: "project",
+      badge: null,
+      features: ["Unlimited pages", "Bespoke UI/UX design", "Custom integrations & APIs", "Advanced SEO strategy", "Priority support", "Ongoing maintenance", "Dedicated project manager"],
+      cta: "Talk to Us",
+    },
+  ],
+  "E-Commerce": [
+    {
+      name: "Shop Starter",
+      price: "$999",
+      period: "one-time",
+      badge: null,
+      features: ["Up to 50 products", "Payment gateway setup", "Mobile-responsive design", "Basic SEO setup", "Order management", "1 round of revisions", "21-day delivery"],
+      cta: "Get Started",
+    },
+    {
+      name: "Shop Growth",
+      price: "$1799",
+      period: "one-time",
+      badge: "Most Popular",
+      features: ["Unlimited products", "Custom storefront design", "Payment + shipping setup", "Inventory management", "Abandoned cart recovery", "Google Shopping feed", "Analytics dashboard"],
+      cta: "Get Started",
+    },
+    {
+      name: "Enterprise Store",
+      price: "Custom",
+      period: "project",
+      badge: null,
+      features: ["Custom e-commerce platform", "ERP / CRM integrations", "Multi-currency support", "Advanced analytics", "Subscription billing", "Dedicated account manager", "24/7 priority support"],
+      cta: "Talk to Us",
+    },
+  ],
+  "Web App": [
+    {
+      name: "App Starter",
+      price: "$2499",
+      period: "one-time",
+      badge: null,
+      features: ["Up to 10 screens", "User authentication", "Firebase backend", "Basic CRUD operations", "Responsive design", "1 round of revisions", "30-day delivery"],
+      cta: "Get Started",
+    },
+    {
+      name: "App Growth",
+      price: "$4399",
+      period: "one-time",
+      badge: "Most Popular",
+      features: ["Unlimited screens", "Custom UI/UX design", "Firebase + REST API", "Role-based access control", "Real-time data sync", "3rd-party integrations", "3 rounds of revisions"],
+      cta: "Get Started",
+    },
+    {
+      name: "App Enterprise",
+      price: "Custom",
+      period: "project",
+      badge: null,
+      features: ["Fully custom architecture", "Scalable cloud backend", "Advanced integrations", "Admin dashboard", "Analytics & reporting", "Dedicated team", "Ongoing support"],
+      cta: "Talk to Us",
+    },
+  ],
+  "Mobile App": [
+    {
+      name: "App Starter",
+      price: "$2500",
+      period: "one-time",
+      badge: null,
+      features: ["iOS & Android", "Up to 8 screens", "User authentication", "Push notifications", "Firebase backend", "App store submission", "30-day delivery"],
+      cta: "Get Started",
+    },
+    {
+      name: "App Growth",
+      price: "$4,999",
+      period: "one-time",
+      badge: "Most Popular",
+      features: ["iOS & Android", "Unlimited screens", "Custom UI/UX design", "Payment integration", "Real-time features", "Analytics dashboard", "3 rounds of revisions"],
+      cta: "Get Started",
+    },
+    {
+      name: "App Enterprise",
+      price: "Custom",
+      period: "project",
+      badge: null,
+      features: ["Cross-platform or native", "Complex integrations", "Offline functionality", "Admin panel", "Advanced analytics", "Dedicated project manager", "Priority support"],
+      cta: "Talk to Us",
+    },
+  ],
+  "Maintenance": [
+    {
+      name: "Basic Care",
+      price: "$79",
+      period: "/month",
+      badge: null,
+      features: ["Monthly updates", "Security patches", "Uptime monitoring", "Monthly report", "Email support", "1 content update/mo", "Weekly backups"],
+      cta: "Get Started",
+    },
+    {
+      name: "Growth Care",
+      price: "$179",
+      period: "/month",
+      badge: "Most Popular",
+      features: ["Weekly updates", "Security patches", "Performance optimisation", "Priority support", "4 content updates/mo", "Daily backups", "Monthly analytics report"],
+      cta: "Get Started",
+    },
+    {
+      name: "Pro Care",
+      price: "$379",
+      period: "/month",
+      badge: null,
+      features: ["Unlimited updates", "24/7 monitoring", "Speed optimisation", "Dedicated support line", "Unlimited content updates", "Real-time backups", "SEO reporting"],
+      cta: "Talk to Us",
+    },
+  ],
+};
 
 const Pricing = () => {
   const [ref, inView] = useInView();
+  const [activeTab, setActiveTab] = useState("Website");
+  const plans = pricingPlans[activeTab];
+
   return (
-    <section id="pricing" style={{ background: "#fff" }}>
+    <section id="pricing" style={{ background: "#f8faf9" }}>
       <div className="section" ref={ref}>
-        <div style={{ textAlign: "center", marginBottom: 56 }}>
+        {/* Header */}
+        <div style={{ textAlign: "center", marginBottom: 48 }}>
           <div className={`fade-up${inView ? " visible" : ""}`}><span className="pill">Pricing</span></div>
           <h2 className={`fade-up${inView ? " visible" : ""} d1`} style={{ fontSize: "clamp(28px, 3.5vw, 48px)", fontWeight: 800, marginTop: 16, marginBottom: 12 }}>
-            Simple pricing, <span style={{ color: "#22c55e" }}>no surprises</span>
+            Simple pricing, <span style={{ color: "#c2773a" }}>no surprises</span>
           </h2>
-          <p className={`fade-up${inView ? " visible" : ""} d2`} style={{ color: "#4b5563", fontSize: 16, maxWidth: 460, margin: "0 auto" }}>
+          <p className={`fade-up${inView ? " visible" : ""} d2`} style={{ color: "#4b5563", fontSize: 16, maxWidth: 520, margin: "0 auto 32px" }}>
             Transparent packages built for businesses of every size. Pay once, own it forever.
           </p>
+
+          {/* Service tabs */}
+          <div className={`fade-up${inView ? " visible" : ""} d3`} style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center" }}>
+            {pricingTabs.map(tab => (
+              <button key={tab} onClick={() => setActiveTab(tab)} style={{
+                padding: "10px 20px", borderRadius: 99, fontSize: 14, fontWeight: 600,
+                cursor: "pointer", border: "none", transition: "all 0.2s",
+                background: activeTab === tab ? "#0a0f0d" : "#fff",
+                color: activeTab === tab ? "#fff" : "#4b5563",
+                boxShadow: activeTab === tab ? "0 4px 16px rgba(0,0,0,0.18)" : "0 1px 4px rgba(0,0,0,0.08)",
+              }}>{tab}</button>
+            ))}
+          </div>
         </div>
 
-        <div className={`fade-up${inView ? " visible" : ""} d2`} style={{
+        {/* Plan cards */}
+        <div className={`fade-up${inView ? " visible" : ""} d3`} style={{
           display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24, alignItems: "start",
         }}>
           {plans.map((p) => (
             <div key={p.name} style={{
-              background: p.color, border: `1.5px solid ${p.border}`,
-              borderRadius: 28, padding: "36px 32px", position: "relative",
+              borderRadius: 20, overflow: "hidden",
+              border: p.badge ? "2px solid #c2773a" : "1px solid #e5e7eb",
+              boxShadow: p.badge ? "0 8px 32px rgba(194,119,58,0.15)" : "0 4px 20px rgba(0,0,0,0.07)",
               transition: "transform 0.25s, box-shadow 0.25s",
+              position: "relative",
             }}
-              onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.transform = "translateY(-4px)"; (e.currentTarget as HTMLDivElement).style.boxShadow = p.color === "#0a0f0d" ? "0 16px 48px rgba(0,0,0,0.35)" : "0 16px 48px rgba(34,197,94,0.12)"; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.transform = "none"; (e.currentTarget as HTMLDivElement).style.boxShadow = "none"; }}
+              onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-6px)"; e.currentTarget.style.boxShadow = p.badge ? "0 20px 48px rgba(194,119,58,0.22)" : "0 16px 40px rgba(0,0,0,0.13)"; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = p.badge ? "0 8px 32px rgba(194,119,58,0.15)" : "0 4px 20px rgba(0,0,0,0.07)"; }}
             >
+              {/* Badge */}
               {p.badge && (
                 <div style={{
-                  position: "absolute", top: -14, left: "50%", transform: "translateX(-50%)",
-                  background: "#22c55e", color: "#fff", borderRadius: 99, padding: "5px 16px",
-                  fontSize: 12, fontWeight: 700, letterSpacing: 0.3,
+                  position: "absolute", top: 16, right: 16, zIndex: 1,
+                  background: "#c2773a", color: "#fff", borderRadius: 99,
+                  padding: "4px 12px", fontSize: 11, fontWeight: 700, letterSpacing: 0.3,
                 }}>{p.badge}</div>
               )}
-              <div style={{ color: p.color === "#0a0f0d" ? "#9ca3af" : "#6b7280", fontSize: 13, fontWeight: 600, marginBottom: 8 }}>{p.name}</div>
-              <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 8 }}>
-                <span style={{ fontSize: 40, fontWeight: 800, fontFamily: "'Bricolage Grotesque', sans-serif", color: p.color === "#0a0f0d" ? "#fff" : "#0a0f0d" }}>{p.price}</span>
-                <span style={{ fontSize: 13, color: p.color === "#0a0f0d" ? "#6b7280" : "#9ca3af" }}>{p.period}</span>
+
+              {/* Dark header */}
+              <div style={{ background: "#0a0f0d", padding: "28px 28px 24px" }}>
+                <div style={{
+                  fontSize: 12, fontWeight: 800, color: "#e8c49a",
+                  textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 14,
+                }}>{p.name}</div>
+                <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
+                  <span style={{
+                    fontSize: 48, fontWeight: 800, color: "#fff",
+                    fontFamily: "'Bricolage Grotesque', sans-serif", lineHeight: 1,
+                  }}>{p.price}</span>
+                  <span style={{ fontSize: 14, color: "#6b7280", marginBottom: 2 }}>{p.period}</span>
+                </div>
               </div>
-              <p style={{ fontSize: 14, color: p.color === "#0a0f0d" ? "#9ca3af" : "#4b5563", lineHeight: 1.6, marginBottom: 28 }}>{p.desc}</p>
-              <ul style={{ listStyle: "none", marginBottom: 32, display: "flex", flexDirection: "column", gap: 12 }}>
-                {p.features.map(f => (
-                  <li key={f} style={{ display: "flex", gap: 10, alignItems: "flex-start", fontSize: 14, color: p.color === "#0a0f0d" ? "#d1fae5" : "#374151" }}>
-                    <span style={{ color: "#22c55e", flexShrink: 0, marginTop: 1 }}>✓</span>{f}
-                  </li>
-                ))}
-              </ul>
-              <a href="#contact" className={p.ctaStyle} style={{ width: "100%", justifyContent: "center" }}>{p.cta} →</a>
+
+              {/* Features */}
+              <div style={{ background: "#fff", padding: "24px 28px 28px" }}>
+                <ul style={{ listStyle: "none", marginBottom: 24, display: "flex", flexDirection: "column", gap: 11 }}>
+                  {p.features.map(f => (
+                    <li key={f} style={{ display: "flex", gap: 10, alignItems: "flex-start", fontSize: 14, color: "#374151" }}>
+                      <span style={{
+                        width: 20, height: 20, borderRadius: "50%",
+                        background: "#fde8d0", color: "#8b4513",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        fontSize: 11, fontWeight: 700, flexShrink: 0, marginTop: 1,
+                      }}>✓</span>
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                <a href="#contact" className="btn-brown" style={{ width: "100%", justifyContent: "center" }}>
+                  {p.cta} →
+                </a>
+              </div>
+
+              {/* Footer */}
+              <div style={{
+                background: "#f8faf9", borderTop: "1px solid #e5e7eb",
+                padding: "14px 28px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12,
+              }}>
+                <div>
+                  <div style={{ fontSize: 11, color: "#9ca3af", marginBottom: 2 }}>Share your idea?</div>
+                  <a href="mailto:quokkasupport@gmail.com" style={{ fontSize: 12, fontWeight: 600, color: "#c2773a", textDecoration: "none" }}>
+                    quokkasupport@gmail.com
+                  </a>
+                </div>
+                <div style={{ width: 1, height: 28, background: "#e5e7eb", flexShrink: 0 }} />
+                <div style={{ textAlign: "right" }}>
+                  <div style={{ fontSize: 11, color: "#9ca3af", marginBottom: 2 }}>Want to discuss?</div>
+                  <a href="#contact" style={{ fontSize: 12, fontWeight: 600, color: "#0a0f0d", textDecoration: "none" }}>
+                    Contact us →
+                  </a>
+                </div>
+              </div>
             </div>
           ))}
         </div>
@@ -1231,66 +1399,34 @@ const Pricing = () => {
    PORTFOLIO SECTION
 ───────────────────────────────────────────── */
 const portfolioItems = [
+
   {
-    title: "Bloom Florist",
-    category: "E-commerce",
-    desc: "Online flower shop with real-time inventory, local delivery booking, and a mobile-first checkout.",
-    emoji: "🌸",
-    bg: "#fdf4ff",
-    accent: "#a855f7",
-    tags: ["React", "Shopify", "SEO"],
-  },
-  {
-    title: "Torres Plumbing",
+    title: "Creyeti",
     category: "Business Website",
-    desc: "Lead-generation site with click-to-call, service area maps, and Google Reviews integration.",
-    emoji: "🔧",
-    bg: "#eff6ff",
-    accent: "#3b82f6",
-    tags: ["Next.js", "Tailwind", "Google APIs"],
+    url: "https://www.creyeti.com.au",
+    desc: "Bold creative agency site with immersive animations, portfolio showcases, and seamless brand storytelling.",
+    emoji: "🎨",
+    video: "/creyeti1.mp4",
+    bg: "#fdf4ff",
+    accent: "#9333ea",
+    tags: ["React", "GSAP", "Tailwind"],
   },
   {
-    title: "NairFit Studio",
-    category: "Booking App",
-    desc: "Fitness booking platform with class scheduling, member portal, and Stripe payment integration.",
-    emoji: "💪",
-    bg: "#f0fdf4",
-    accent: "#22c55e",
-    tags: ["React", "Firebase", "Stripe"],
-  },
-  {
-    title: "Lee's Café Group",
-    category: "Multi-location Site",
-    desc: "Premium restaurant group site with interactive menus, reservation forms, and a loyalty program.",
-    emoji: "☕",
-    bg: "#fff7ed",
-    accent: "#f97316",
-    tags: ["CMS", "Animations", "Maps"],
-  },
-  {
-    title: "SolarSave Co.",
+    title: "The Kaiverse",
     category: "Web Application",
-    desc: "Solar savings calculator with postcode lookup, energy data API, and instant quote generation.",
-    emoji: "☀️",
-    bg: "#fefce8",
-    accent: "#eab308",
-    tags: ["React", "REST API", "Charts"],
-  },
-  {
-    title: "Anchor Real Estate",
-    category: "Property Portal",
-    desc: "Property listing platform with advanced filters, virtual tour embeds, and agent contact flows.",
-    emoji: "🏡",
-    bg: "#f0f9ff",
-    accent: "#0ea5e9",
-    tags: ["Next.js", "Algolia", "Maps"],
+    url: "https://thekaiverse.com.au",
+    desc: "Dynamic digital platform with rich interactive experiences, content hub, and community-driven features.",
+    emoji: "🌐",
+    bg: "#fdf5ec",
+    accent: "#a0522d",
+    tags: ["React", "CMS", "Animations"],
   },
 ];
 
 const Portfolio = () => {
   const [ref, inView] = useInView();
   const [activeFilter, setActiveFilter] = useState("All");
-  const categories = ["All", "E-commerce", "Business Website", "Booking App", "Web Application", "Multi-location Site", "Property Portal"];
+  const categories = ["All", "Business Website", "Web Application"];
   const filtered = activeFilter === "All" ? portfolioItems : portfolioItems.filter(i => i.category === activeFilter);
 
   return (
@@ -1299,7 +1435,7 @@ const Portfolio = () => {
         <div style={{ textAlign: "center", marginBottom: 48 }}>
           <div className={`fade-up${inView ? " visible" : ""}`}><span className="pill">Portfolio</span></div>
           <h2 className={`fade-up${inView ? " visible" : ""} d1`} style={{ fontSize: "clamp(28px, 3.5vw, 48px)", fontWeight: 800, marginTop: 16, marginBottom: 12 }}>
-            Work we're <span style={{ color: "#22c55e" }}>proud of</span>
+            Work we're <span style={{ color: "#c2773a" }}>proud of</span>
           </h2>
           <p className={`fade-up${inView ? " visible" : ""} d2`} style={{ color: "#4b5563", fontSize: 16, maxWidth: 460, margin: "0 auto 32px" }}>
             Real projects, real clients, real results — from local businesses to growing brands.
@@ -1310,9 +1446,9 @@ const Portfolio = () => {
             {categories.map(cat => (
               <button key={cat} onClick={() => setActiveFilter(cat)} style={{
                 padding: "7px 16px", borderRadius: 99, fontSize: 13, fontWeight: 500, cursor: "pointer", border: "1.5px solid",
-                borderColor: activeFilter === cat ? "#22c55e" : "#e5e7eb",
-                background: activeFilter === cat ? "#dcfce7" : "#fff",
-                color: activeFilter === cat ? "#16a34a" : "#6b7280",
+                borderColor: activeFilter === cat ? "#c2773a" : "#e5e7eb",
+                background: activeFilter === cat ? "#fde8d0" : "#fff",
+                color: activeFilter === cat ? "#8b4513" : "#6b7280",
                 transition: "all 0.2s",
               }}>{cat}</button>
             ))}
@@ -1322,38 +1458,55 @@ const Portfolio = () => {
         <div className={`fade-up${inView ? " visible" : ""} d3`} style={{
           display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24,
         }}>
-          {filtered.map((item) => (
-            <div key={item.title} style={{
+          {filtered.map((item) => {
+            const cardContent = (
+              <>
+                {/* Preview area */}
+                <div style={{
+                  height: 220, display: "flex", alignItems: "center", justifyContent: "center",
+                  fontSize: 56, background: item.bg, overflow: "hidden", position: "relative",
+                }}>
+                  {item.video ? (
+                    <video
+                      src={item.video}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                    />
+                  ) : item.emoji}
+                </div>
+                <div style={{ padding: "14px 20px 16px" }}>
+                  <div style={{ fontWeight: 700, fontSize: 17, color: "#0a0f0d" }}>
+                    {item.title}
+                    {item.url && <span style={{ fontSize: 11, color: item.accent, marginLeft: 6, fontWeight: 500 }}>↗</span>}
+                  </div>
+                </div>
+              </>
+            );
+            const sharedStyle = {
               background: item.bg, borderRadius: 24, overflow: "hidden",
               border: "1px solid #e5e7eb", transition: "transform 0.25s, box-shadow 0.25s",
-            }}
-              onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.transform = "translateY(-4px)"; (e.currentTarget as HTMLDivElement).style.boxShadow = "0 12px 40px rgba(0,0,0,0.10)"; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.transform = "none"; (e.currentTarget as HTMLDivElement).style.boxShadow = "none"; }}
-            >
-              {/* Preview area */}
-              <div style={{
-                height: 140, display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: 56, background: item.bg,
-              }}>{item.emoji}</div>
-              <div style={{ padding: "20px 24px 24px" }}>
-                <div style={{ fontSize: 11, fontWeight: 700, color: item.accent, textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 6 }}>{item.category}</div>
-                <div style={{ fontWeight: 700, fontSize: 17, color: "#0a0f0d", marginBottom: 8 }}>{item.title}</div>
-                <p style={{ fontSize: 13, color: "#4b5563", lineHeight: 1.6, marginBottom: 16 }}>{item.desc}</p>
-                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-                  {item.tags.map(tag => (
-                    <span key={tag} style={{
-                      background: "#fff", border: "1px solid #e5e7eb",
-                      borderRadius: 8, padding: "3px 10px", fontSize: 12, color: "#6b7280", fontWeight: 500,
-                    }}>{tag}</span>
-                  ))}
-                </div>
+              display: "block", textDecoration: "none", color: "inherit",
+            };
+            const hoverIn = (e) => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 12px 40px rgba(0,0,0,0.10)"; };
+            const hoverOut = (e) => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; };
+            return item.url ? (
+              <a key={item.title} href={item.url} target="_blank" rel="noopener noreferrer"
+                style={{ ...sharedStyle, cursor: "pointer" }}
+                onMouseEnter={hoverIn} onMouseLeave={hoverOut}
+              >{cardContent}</a>
+            ) : (
+              <div key={item.title} style={sharedStyle} onMouseEnter={hoverIn} onMouseLeave={hoverOut}>
+                {cardContent}
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         <div className={`fade-up${inView ? " visible" : ""} d4`} style={{ textAlign: "center", marginTop: 48 }}>
-          <a href="#contact" className="btn-green">Start your project →</a>
+          <a href="#contact" className="btn-brown">Start your project →</a>
         </div>
       </div>
       <style>{`@media(max-width:768px){ #portfolio > div > div:nth-child(3) { grid-template-columns: 1fr !important; } }`}</style>
@@ -1372,8 +1525,22 @@ const blogPosts = [
     date: "Mar 18, 2025",
     readTime: "4 min read",
     emoji: "🔍",
-    bg: "#f0fdf4",
-    accent: "#22c55e",
+    bg: "#fdf5ec",
+    accent: "#c2773a",
+    content: [
+      { type: "intro", text: "You built the website. You hit publish. You waited. And… nothing. If your business isn't appearing on Google, you're not alone — but you're also not helpless. Here are the five most common reasons small business websites stay invisible, and exactly what you can do about each one." },
+      { type: "heading", text: "1. Your site has no Google Business Profile" },
+      { type: "para", text: "For local businesses, Google Business Profile (formerly Google My Business) is often more important than your actual website. If you haven't claimed and completed your profile — with your address, phone number, opening hours, photos, and category — Google has very little reason to show you in local search results. Set this up first. It's free and takes under an hour." },
+      { type: "heading", text: "2. Your pages have no target keywords" },
+      { type: "para", text: "Google can't read your mind. If your homepage just says 'Welcome to our business' with no mention of what you do or where you're based, search engines have nothing to work with. Every page on your site should clearly state what service you offer and which suburb or city you serve. Think: 'affordable plumber in Brisbane' not just 'plumber'." },
+      { type: "heading", text: "3. Your website loads too slowly" },
+      { type: "para", text: "Page speed is a confirmed Google ranking factor. If your site takes more than 3 seconds to load, Google penalises you — and most visitors leave anyway. Common culprits include uncompressed images, cheap shared hosting, and bloated WordPress plugins. Use Google PageSpeed Insights to check your score. Anything below 70 on mobile needs work." },
+      { type: "heading", text: "4. You have no backlinks" },
+      { type: "para", text: "A backlink is a link from another website to yours. Google treats these as votes of confidence. A brand-new site with zero backlinks looks untrustworthy to Google's algorithm. Start simple: list your business on directories like Yellow Pages, True Local, and industry-specific sites. Ask suppliers or partners to link to you. Even one or two quality links can make a real difference early on." },
+      { type: "heading", text: "5. Your site isn't mobile-friendly" },
+      { type: "para", text: "Over 60% of searches happen on mobile devices, and Google uses mobile-first indexing — meaning it primarily uses the mobile version of your site for ranking. If your website looks broken or is hard to use on a phone, you're being pushed down the results. Test your site at Google's Mobile-Friendly Test tool. If it fails, it's time for a rebuild." },
+      { type: "callout", text: "The good news? All five of these are fixable. Web Quokka builds every site with SEO fundamentals baked in from day one — fast loading, mobile-first design, clean structure, and proper keyword targeting. Get in touch if you'd like us to take a look at your current site." },
+    ],
   },
   {
     category: "Design",
@@ -1384,29 +1551,109 @@ const blogPosts = [
     emoji: "🎨",
     bg: "#fdf4ff",
     accent: "#a855f7",
+    content: [
+      { type: "intro", text: "Research from Google found that users form a visual impression of a website in as little as 50 milliseconds — that's 0.05 seconds. Before they've read a single word, they've already decided whether your site feels trustworthy, professional, or worth their time. So what exactly are they reacting to?" },
+      { type: "heading", text: "Visual complexity kills trust fast" },
+      { type: "para", text: "The number one thing that makes a site feel untrustworthy at a glance is visual clutter. Too many fonts, too many colours, overcrowded layouts, and low-quality images all register as 'chaos' in the brain instantly. The most trusted websites tend to be clean, airy, and consistent. White space isn't wasted space — it's breathing room that signals confidence." },
+      { type: "heading", text: "Colour does more work than you think" },
+      { type: "para", text: "Colour psychology is real. Blues and greens signal calm and trust. Browns and earthy tones feel grounded and authentic. Bright, clashing colours can feel aggressive or cheap. Your colour palette should match the emotion you want customers to associate with your brand. A law firm and a surf shop need very different palettes — and getting it wrong costs you customers before they've read anything." },
+      { type: "heading", text: "The hero section is everything" },
+      { type: "para", text: "The top section of your homepage — what visitors see without scrolling — is the most valuable real estate on your entire website. It needs to answer three questions instantly: Who are you? What do you do? Why should I care? Most small business sites fail this test. They lead with a vague tagline, a blurry stock photo, and no clear call to action. Be specific. Be direct. Tell people exactly what you offer and who it's for." },
+      { type: "heading", text: "Trust signals matter immediately" },
+      { type: "para", text: "Even subconsciously, visitors are scanning for trust signals the moment they land. Things like: a professional logo, a real phone number or email visible above the fold, customer reviews or logos of past clients, an HTTPS padlock in the browser bar, and a clean, modern design. Missing even a couple of these can be enough to send someone straight back to Google." },
+      { type: "heading", text: "Mobile design is the first impression now" },
+      { type: "para", text: "For most businesses, the majority of visitors are on their phones. That means the mobile version of your site is your first impression — not the desktop. If text is too small, buttons are hard to tap, or images are cropped awkwardly, you've already lost them. Design mobile-first, then scale up." },
+      { type: "callout", text: "At Web Quokka, every site we build is designed to earn trust in those first 50 milliseconds. Clean layouts, strong hierarchy, mobile-first — and always built around your specific audience. Want a free review of your current site's first impression? Reach out." },
+    ],
   },
   {
     category: "E-commerce",
     title: "How a $1,500 Website Generated $40k in Its First Quarter",
-    excerpt: "The story behind Bloom Florist's online store — what we built, why it worked, and the numbers that followed.",
+    excerpt: "The story behind a local florist's online store — what we built, why it worked, and the numbers that followed.",
     date: "Feb 10, 2025",
     readTime: "6 min read",
     emoji: "📈",
     bg: "#fff7ed",
     accent: "#f97316",
+    content: [
+      { type: "intro", text: "When a local florist approached us, they were doing everything by phone and Instagram DMs. They had a loyal local following, great product, and zero online ordering. We built them a simple e-commerce site for $1,500. In the first three months, it processed over $40,000 in orders. Here's the breakdown of what we built and why it worked." },
+      { type: "heading", text: "The problem: great product, friction-filled buying" },
+      { type: "para", text: "Before the website, ordering was a back-and-forth process — DM to enquire, wait for a reply, get a price, pay via bank transfer, confirm. Each step lost customers. People who were ready to buy right now had to wait. Impulse purchases — especially for gifts and occasions — don't survive a 24-hour wait for a reply. The business was leaking revenue it didn't even know about." },
+      { type: "heading", text: "What we built" },
+      { type: "para", text: "The site wasn't complicated. It had a clean homepage with a strong hero image, a product catalogue with clear categories (bouquets, arrangements, subscriptions), a straightforward checkout with card payments via Stripe, and a delivery zone map so customers knew instantly if we could reach them. We also added a simple occasion-based filter — 'Birthday', 'Wedding', 'Sympathy', 'Just Because' — which made browsing feel intuitive and personal." },
+      { type: "heading", text: "Why it worked: removing the 'think about it' moment" },
+      { type: "para", text: "The biggest conversion win was instant pricing and instant checkout. When someone sees a bouquet they love at 9pm on a Tuesday, they can buy it in 90 seconds without waiting for a business to wake up and reply. E-commerce doesn't sleep. That single shift — from 'enquire and wait' to 'see it, buy it' — was responsible for the majority of the revenue uplift." },
+      { type: "heading", text: "The role of photography" },
+      { type: "para", text: "We spent one afternoon doing a proper product photography session with the owner's existing phone and a $30 ring light. Good lighting, clean backgrounds, consistent angles. The difference between blurry Instagram photos and clean product shots on a white background is enormous in terms of perceived value. Customers feel more confident buying something they can see clearly." },
+      { type: "heading", text: "The numbers" },
+      { type: "para", text: "Month 1: $8,400 in online orders. Month 2: $13,200. Month 3: $19,600. Total first quarter: $41,200. The site cost $1,500 to build. It paid for itself in the first week of operation. The owner now spends less time on admin and more time on the work she actually loves." },
+      { type: "callout", text: "Every dollar you invest in the right website can return many times over. If your business is still relying on DMs, phone calls, or manual processes to take orders, there's a better way. Web Quokka builds affordable, high-converting e-commerce sites for small Australian businesses. Let's talk." },
+    ],
   },
 ];
 
+const BlogModal = ({ post, onClose }) => {
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    const onKey = (e) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => { document.body.style.overflow = ""; window.removeEventListener("keydown", onKey); };
+  }, [onClose]);
+
+  return (
+    <div onClick={onClose} style={{
+      position: "fixed", inset: 0, zIndex: 9000,
+      background: "rgba(0,0,0,0.55)", backdropFilter: "blur(4px)",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      padding: "24px",
+    }}>
+      <div onClick={e => e.stopPropagation()} style={{
+        background: "#fff", borderRadius: 24, maxWidth: 680, width: "100%",
+        maxHeight: "85vh", overflowY: "auto", boxShadow: "0 32px 80px rgba(0,0,0,0.2)",
+      }}>
+        {/* Header */}
+        <div style={{ height: 180, background: post.bg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 72, borderRadius: "24px 24px 0 0", position: "relative" }}>
+          {post.emoji}
+          <button onClick={onClose} style={{
+            position: "absolute", top: 16, right: 16, background: "rgba(0,0,0,0.15)",
+            border: "none", borderRadius: "50%", width: 36, height: 36, cursor: "pointer",
+            fontSize: 18, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center",
+          }}>✕</button>
+        </div>
+        {/* Body */}
+        <div style={{ padding: "36px 40px 48px" }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: post.accent, textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 12 }}>{post.category}</div>
+          <h2 style={{ fontSize: "clamp(20px, 2.5vw, 28px)", fontWeight: 800, color: "#0a0f0d", lineHeight: 1.3, marginBottom: 8 }}>{post.title}</h2>
+          <div style={{ fontSize: 12, color: "#9ca3af", marginBottom: 32 }}>{post.date} · {post.readTime}</div>
+          {post.content.map((block, i) => {
+            if (block.type === "intro") return <p key={i} style={{ fontSize: 16, color: "#374151", lineHeight: 1.75, marginBottom: 24, fontWeight: 500 }}>{block.text}</p>;
+            if (block.type === "heading") return <h3 key={i} style={{ fontSize: 18, fontWeight: 700, color: "#0a0f0d", marginTop: 32, marginBottom: 10 }}>{block.text}</h3>;
+            if (block.type === "para") return <p key={i} style={{ fontSize: 15, color: "#4b5563", lineHeight: 1.8, marginBottom: 16 }}>{block.text}</p>;
+            if (block.type === "callout") return (
+              <div key={i} style={{ marginTop: 32, background: "#fdf5ec", borderLeft: `4px solid ${post.accent}`, borderRadius: "0 12px 12px 0", padding: "18px 22px" }}>
+                <p style={{ fontSize: 14, color: "#78350f", lineHeight: 1.7, margin: 0, fontWeight: 500 }}>{block.text}</p>
+              </div>
+            );
+            return null;
+          })}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Blog = () => {
   const [ref, inView] = useInView();
+  const [activePost, setActivePost] = useState(null);
   return (
     <section id="blog" style={{ background: "#fff" }}>
+      {activePost && <BlogModal post={activePost} onClose={() => setActivePost(null)} />}
       <div className="section" ref={ref}>
         <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 24, marginBottom: 48 }}>
           <div>
             <div className={`fade-up${inView ? " visible" : ""}`}><span className="pill">Blog</span></div>
             <h2 className={`fade-up${inView ? " visible" : ""} d1`} style={{ fontSize: "clamp(28px, 3.5vw, 48px)", fontWeight: 800, marginTop: 16, marginBottom: 12 }}>
-              Insights & <span style={{ color: "#22c55e" }}>tips</span>
+              Insights & <span style={{ color: "#c2773a" }}>tips</span>
             </h2>
             <p className={`fade-up${inView ? " visible" : ""} d2`} style={{ color: "#4b5563", fontSize: 16, maxWidth: 400 }}>
               Plain-English advice to help your business grow online.
@@ -1421,12 +1668,12 @@ const Blog = () => {
           display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 28,
         }}>
           {blogPosts.map((post) => (
-            <article key={post.title} style={{
+            <article key={post.title} onClick={() => setActivePost(post)} style={{
               background: "#fff", border: "1px solid #e5e7eb", borderRadius: 24, overflow: "hidden",
               transition: "transform 0.25s, box-shadow 0.25s", cursor: "pointer",
             }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = "translateY(-4px)"; (e.currentTarget as HTMLElement).style.boxShadow = "0 12px 40px rgba(0,0,0,0.08)"; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = "none"; (e.currentTarget as HTMLElement).style.boxShadow = "none"; }}
+              onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 12px 40px rgba(0,0,0,0.08)"; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}
             >
               {/* Thumbnail */}
               <div style={{
@@ -1470,8 +1717,8 @@ const Footer = () => (
           <h4 style={{ color: "#fff", fontWeight: 600, fontSize: 14, marginBottom: 16 }}>Services</h4>
           {["Website Development", "E-commerce", "Web Applications", "Mobile Apps", "Maintenance", "Hosting"].map(s => (
             <a key={s} href="#services" style={{ display: "block", marginBottom: 10, fontSize: 14, color: "#9ca3af", textDecoration: "none", transition: "color 0.2s" }}
-              onMouseEnter={e => (e.target as HTMLAnchorElement).style.color = "#22c55e"}
-              onMouseLeave={e => (e.target as HTMLAnchorElement).style.color = "#9ca3af"}>
+              onMouseEnter={e => e.target.style.color = "#c2773a"}
+              onMouseLeave={e => e.target.style.color = "#9ca3af"}>
               {s}
             </a>
           ))}
@@ -1479,10 +1726,10 @@ const Footer = () => (
         {/* Company */}
         <div>
           <h4 style={{ color: "#fff", fontWeight: 600, fontSize: 14, marginBottom: 16 }}>Company</h4>
-          {[["Process", "#process"], ["Portfolio", "#portfolio"], ["Pricing", "#pricing"], ["Blog", "#blog"], ["Testimonials", "#testimonials"], ["Contact", "#contact"]].map(([l, h]) => (
+          {[["Process", "#process"], ["Pricing", "#pricing"], ["Blog", "#blog"], ["Testimonials", "#testimonials"], ["Contact", "#contact"]].map(([l, h]) => (
             <a key={l} href={h} style={{ display: "block", marginBottom: 10, fontSize: 14, color: "#9ca3af", textDecoration: "none", transition: "color 0.2s" }}
-              onMouseEnter={e => (e.target as HTMLAnchorElement).style.color = "#22c55e"}
-              onMouseLeave={e => (e.target as HTMLAnchorElement).style.color = "#9ca3af"}>
+              onMouseEnter={e => e.target.style.color = "#c2773a"}
+              onMouseLeave={e => e.target.style.color = "#9ca3af"}>
               {l}
             </a>
           ))}
@@ -1502,12 +1749,12 @@ const Footer = () => (
             border: "1px solid rgba(255,255,255,0.1)", borderRadius: 99,
             padding: "7px 16px", transition: "color 0.2s, border-color 0.2s",
           }}
-          onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = "#22c55e"; (e.currentTarget as HTMLAnchorElement).style.borderColor = "#22c55e"; }}
-          onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = "#9ca3af"; (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(255,255,255,0.1)"; }}
+          onMouseEnter={e => { e.currentTarget.style.color = "#c2773a"; e.currentTarget.style.borderColor = "#c2773a"; }}
+          onMouseLeave={e => { e.currentTarget.style.color = "#9ca3af"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)"; }}
         >
           ⭐ Leave a Google Review
         </a>
-        <p style={{ fontSize: 13 }}>Made with 💚 in Wollongong, NSW</p>
+        <p style={{ fontSize: 13 }}>Made with 💚 in Hurstville, NSW</p>
       </div>
     </div>
 
@@ -1516,130 +1763,99 @@ const Footer = () => (
 );
 
 /* ─────────────────────────────────────────────
-   PAGE LOADER – Quokka pushes the screen away
+   PAGE LOADER – Quokka runs along loading bar
 ───────────────────────────────────────────── */
-const QuokkaPushing = ({ phase }: { phase: "loading" | "out" }) => (
+const QuokkaRunning = () => (
   <div style={{ position: "relative", display: "inline-block" }}>
     <style>{`
-      @keyframes quokka-strain {
-        0%,100% { transform: translateY(0px) rotate(0deg); }
-        25%     { transform: translateY(-6px) rotate(-2deg); }
-        50%     { transform: translateY(-10px) rotate(0deg) scaleX(0.97); }
-        75%     { transform: translateY(-5px) rotate(2deg); }
+      @keyframes run-bob {
+        0%,100% { transform: translateY(0px) rotate(-8deg); }
+        50%      { transform: translateY(-5px) rotate(-10deg); }
       }
-      @keyframes quokka-lunge {
-        0%   { transform: translateY(-8px); }
-        40%  { transform: translateY(-28px) scaleY(1.06) scaleX(0.95); }
-        100% { transform: translateY(-60px) scaleY(1.1); }
+      @keyframes leg-a {
+        0%,100% { transform-origin: 12px 0; transform: rotate(30deg); }
+        50%      { transform-origin: 12px 0; transform: rotate(-40deg); }
       }
-      @keyframes sweat-a {
-        0%,100% { opacity:0; transform:translate(0,0) scale(0.4); }
-        25%     { opacity:1; transform:translate(-6px,-14px) scale(1); }
-        75%     { opacity:0; transform:translate(-9px,6px) scale(0.7); }
+      @keyframes leg-b {
+        0%,100% { transform-origin: 12px 0; transform: rotate(-40deg); }
+        50%      { transform-origin: 12px 0; transform: rotate(30deg); }
       }
-      @keyframes sweat-b {
-        0%,100% { opacity:0; transform:translate(0,0) scale(0.4); }
-        35%     { opacity:1; transform:translate(7px,-16px) scale(1); }
-        80%     { opacity:0; transform:translate(10px,5px) scale(0.6); }
+      @keyframes arm-a {
+        0%,100% { transform-origin: 8px 0; transform: rotate(-40deg); }
+        50%      { transform-origin: 8px 0; transform: rotate(20deg); }
       }
-      @keyframes sweat-c {
-        0%,100% { opacity:0; transform:translate(0,0) scale(0.4); }
-        45%     { opacity:1; transform:translate(-4px,-11px) scale(0.85); }
-        85%     { opacity:0; transform:translate(-7px,9px) scale(0.5); }
+      @keyframes arm-b {
+        0%,100% { transform-origin: 8px 0; transform: rotate(20deg); }
+        50%      { transform-origin: 8px 0; transform: rotate(-40deg); }
       }
-      @keyframes effort-glow {
-        0%,100% { filter: drop-shadow(0 0 0px #22c55e00); }
-        50%     { filter: drop-shadow(0 0 12px #22c55e88); }
+      @keyframes run-glow {
+        0%,100% { filter: drop-shadow(0 0 0px #c2773a00); }
+        50%      { filter: drop-shadow(0 2px 8px #c2773a66); }
       }
     `}</style>
-
-    {/* Sweat drops – only while straining */}
-    {phase === "loading" && (<>
-      <span style={{ position:"absolute", top:8, left:2, fontSize:13, animation:"sweat-a 1.5s ease-in-out 0.1s infinite", opacity:0, pointerEvents:"none" }}>💧</span>
-      <span style={{ position:"absolute", top:4, right:0, fontSize:10, animation:"sweat-b 1.5s ease-in-out 0.5s infinite", opacity:0, pointerEvents:"none" }}>💧</span>
-      <span style={{ position:"absolute", top:18, left:-10, fontSize:9, animation:"sweat-c 1.7s ease-in-out 0.9s infinite", opacity:0, pointerEvents:"none" }}>💧</span>
-    </>)}
-
-    {/* Quokka body */}
-    <div style={{
-      animation: phase === "out"
-        ? "quokka-lunge 0.55s cubic-bezier(0.22,1,0.36,1) forwards"
-        : "quokka-strain 1.3s ease-in-out infinite",
-    }}>
-      <svg width="108" height="128" viewBox="0 0 108 128" fill="none" xmlns="http://www.w3.org/2000/svg"
-        style={{ animation: phase === "loading" ? "effort-glow 1.3s ease-in-out infinite" : "none" }}>
-
+    <div style={{ animation: "run-bob 0.35s ease-in-out infinite, run-glow 0.7s ease-in-out infinite" }}>
+      <svg width="72" height="90" viewBox="0 0 72 90" fill="none" xmlns="http://www.w3.org/2000/svg">
         {/* Tail */}
-        <path d="M78 92 Q94 84 91 100 Q89 110 79 104" stroke="#22c55e" strokeWidth="7" strokeLinecap="round" fill="none"/>
-
-        {/* Body */}
-        <ellipse cx="52" cy="94" rx="24" ry="22" fill="#22c55e"/>
+        <path d="M52 58 Q64 50 61 64 Q59 72 51 67" stroke="#c2773a" strokeWidth="5" strokeLinecap="round" fill="none"/>
+        {/* Body – leaned forward */}
+        <ellipse cx="34" cy="60" rx="18" ry="15" fill="#c2773a" transform="rotate(-15 34 60)"/>
         {/* Belly */}
-        <ellipse cx="52" cy="96" rx="14" ry="13" fill="#86efac" opacity="0.45"/>
-
-        {/* Left arm – raised, pushing up */}
-        <path d="M30 84 Q20 70 15 57" stroke="#22c55e" strokeWidth="11" strokeLinecap="round" fill="none"/>
-        {/* Right arm – raised, pushing up */}
-        <path d="M74 84 Q84 70 89 57" stroke="#22c55e" strokeWidth="11" strokeLinecap="round" fill="none"/>
-        {/* Hands (flat palms) */}
-        <ellipse cx="14" cy="54" rx="10" ry="6.5" fill="#22c55e" transform="rotate(-25 14 54)"/>
-        <ellipse cx="90" cy="54" rx="10" ry="6.5" fill="#22c55e" transform="rotate(25 90 54)"/>
-
-        {/* Left leg */}
-        <path d="M40 113 Q37 122 31 126" stroke="#22c55e" strokeWidth="10" strokeLinecap="round" fill="none"/>
-        {/* Right leg */}
-        <path d="M64 113 Q67 122 73 126" stroke="#22c55e" strokeWidth="10" strokeLinecap="round" fill="none"/>
-        {/* Feet */}
-        <ellipse cx="30" cy="127" rx="11" ry="5" fill="#22c55e"/>
-        <ellipse cx="73" cy="127" rx="11" ry="5" fill="#22c55e"/>
-
+        <ellipse cx="34" cy="62" rx="10" ry="9" fill="#e8c49a" opacity="0.5" transform="rotate(-15 34 62)"/>
+        {/* Back leg */}
+        <g style={{ animation: "leg-b 0.35s ease-in-out infinite" }}>
+          <line x1="26" y1="72" x2="14" y2="84" stroke="#c2773a" strokeWidth="7" strokeLinecap="round"/>
+          <ellipse cx="11" cy="86" rx="8" ry="4" fill="#c2773a" transform="rotate(-10 11 86)"/>
+        </g>
+        {/* Front leg */}
+        <g style={{ animation: "leg-a 0.35s ease-in-out infinite" }}>
+          <line x1="38" y1="72" x2="50" y2="82" stroke="#c2773a" strokeWidth="7" strokeLinecap="round"/>
+          <ellipse cx="53" cy="84" rx="8" ry="4" fill="#c2773a" transform="rotate(10 53 84)"/>
+        </g>
+        {/* Back arm */}
+        <g style={{ animation: "arm-b 0.35s ease-in-out infinite" }}>
+          <line x1="22" y1="54" x2="10" y2="62" stroke="#c2773a" strokeWidth="6" strokeLinecap="round"/>
+        </g>
+        {/* Front arm */}
+        <g style={{ animation: "arm-a 0.35s ease-in-out infinite" }}>
+          <line x1="40" y1="52" x2="54" y2="58" stroke="#c2773a" strokeWidth="6" strokeLinecap="round"/>
+        </g>
         {/* Neck */}
-        <ellipse cx="52" cy="72" rx="11" ry="9" fill="#22c55e"/>
-
+        <ellipse cx="30" cy="44" rx="9" ry="7" fill="#c2773a" transform="rotate(-15 30 44)"/>
         {/* Head */}
-        <circle cx="52" cy="50" r="26" fill="#22c55e"/>
-
-        {/* Left ear */}
-        <ellipse cx="31" cy="26" rx="11" ry="15" fill="#22c55e"/>
-        <ellipse cx="31" cy="26" rx="6.5" ry="10.5" fill="#86efac"/>
-        {/* Right ear */}
-        <ellipse cx="73" cy="26" rx="11" ry="15" fill="#22c55e"/>
-        <ellipse cx="73" cy="26" rx="6.5" ry="10.5" fill="#86efac"/>
-
+        <circle cx="26" cy="28" r="20" fill="#c2773a"/>
+        {/* Ear */}
+        <ellipse cx="16" cy="12" rx="8" ry="12" fill="#c2773a" transform="rotate(-10 16 12)"/>
+        <ellipse cx="16" cy="12" rx="5" ry="8" fill="#e8c49a" transform="rotate(-10 16 12)"/>
+        <ellipse cx="36" cy="10" rx="8" ry="12" fill="#c2773a" transform="rotate(10 36 10)"/>
+        <ellipse cx="36" cy="10" rx="5" ry="8" fill="#e8c49a" transform="rotate(10 36 10)"/>
         {/* Nose */}
-        <ellipse cx="52" cy="57" rx="6.5" ry="5" fill="#16a34a"/>
-        <circle cx="49" cy="56" r="2.2" fill="#0a0f0d"/>
-        <circle cx="55" cy="56" r="2.2" fill="#0a0f0d"/>
-
-        {/* Eyes – squinting with effort */}
-        <circle cx="41" cy="44" r="5" fill="#0a0f0d"/>
-        <circle cx="63" cy="44" r="5" fill="#0a0f0d"/>
-        <circle cx="42.5" cy="42.5" r="2" fill="white"/>
-        <circle cx="64.5" cy="42.5" r="2" fill="white"/>
-
-        {/* Furrowed brows */}
-        <path d="M35 38 Q41 34.5 47 38" stroke="#0a0f0d" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
-        <path d="M57 38 Q63 34.5 69 38" stroke="#0a0f0d" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
-
-        {/* Grinning mouth */}
-        <path d="M43 62 Q52 69 61 62" stroke="#0a0f0d" strokeWidth="2.2" fill="none" strokeLinecap="round"/>
-
+        <ellipse cx="28" cy="34" rx="5" ry="3.5" fill="#8b4513"/>
+        {/* Eyes – happy, wide open */}
+        <circle cx="19" cy="26" r="4" fill="#0a0f0d"/>
+        <circle cx="33" cy="25" r="4" fill="#0a0f0d"/>
+        <circle cx="20" cy="24.5" r="1.5" fill="white"/>
+        <circle cx="34" cy="23.5" r="1.5" fill="white"/>
+        {/* Happy brows */}
+        <path d="M14 21 Q19 18 24 21" stroke="#0a0f0d" strokeWidth="2" strokeLinecap="round" fill="none"/>
+        <path d="M28 20 Q33 17 38 20" stroke="#0a0f0d" strokeWidth="2" strokeLinecap="round" fill="none"/>
+        {/* Big smile */}
+        <path d="M18 32 Q26 39 34 32" stroke="#0a0f0d" strokeWidth="2" fill="none" strokeLinecap="round"/>
         {/* Cheeks */}
-        <ellipse cx="35" cy="54" rx="7" ry="4" fill="#86efac" opacity="0.5"/>
-        <ellipse cx="69" cy="54" rx="7" ry="4" fill="#86efac" opacity="0.5"/>
+        <ellipse cx="13" cy="31" rx="5" ry="3" fill="#e8c49a" opacity="0.6"/>
+        <ellipse cx="39" cy="30" rx="5" ry="3" fill="#e8c49a" opacity="0.6"/>
       </svg>
     </div>
   </div>
 );
 
-const PageLoader = ({ onDone }: { onDone: () => void }) => {
-  const [phase, setPhase] = useState<"loading" | "out">("loading");
+const PageLoader = ({ onDone }) => {
+  const [phase, setPhase] = useState("loading");
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     const start = performance.now();
     const duration = 1400;
-    const raf = (now: number) => {
+    const raf = (now) => {
       const p = Math.min((now - start) / duration, 1);
       setProgress(Math.round(p * 100));
       if (p < 1) requestAnimationFrame(raf);
@@ -1673,30 +1889,40 @@ const PageLoader = ({ onDone }: { onDone: () => void }) => {
         marginTop: 10, marginBottom: 32,
       }}>Web Quokka</div>
 
-      {/* Progress bar */}
-      <div style={{ width: 200, height: 3, background: "rgba(255,255,255,0.1)", borderRadius: 99, overflow: "hidden", marginBottom: 10 }}>
+      {/* Running quokka + progress bar track */}
+      <div style={{ width: 280, position: "relative", marginBottom: 16 }}>
+        {/* Quokka sits at the tip of the progress */}
         <div style={{
-          height: "100%", borderRadius: 99,
-          background: "linear-gradient(90deg, #22c55e, #86efac)",
-          width: `${progress}%`,
-          transition: "width 0.08s linear",
-          boxShadow: "0 0 10px #22c55e88",
-        }} />
+          position: "absolute",
+          left: `${progress}%`,
+          bottom: 14,
+          transform: "translateX(-50%)",
+          transition: "left 0.08s linear",
+          pointerEvents: "none",
+        }}>
+          <QuokkaRunning />
+        </div>
+        {/* Track */}
+        <div style={{ width: "100%", height: 6, background: "rgba(255,255,255,0.08)", borderRadius: 99, overflow: "hidden", marginTop: 100 }}>
+          <div style={{
+            height: "100%", borderRadius: 99,
+            background: "linear-gradient(90deg, #c2773a, #e8c49a)",
+            width: `${progress}%`,
+            transition: "width 0.08s linear",
+            boxShadow: "0 0 10px #c2773a88",
+          }} />
+        </div>
       </div>
-      <div style={{ fontSize: 12, color: "#4b5563", fontVariantNumeric: "tabular-nums", marginBottom: 40 }}>
+
+      <div style={{ fontSize: 12, color: "#4b5563", fontVariantNumeric: "tabular-nums", marginBottom: 8 }}>
         {progress}%
       </div>
-
-      {/* Quokka */}
-      <QuokkaPushing phase={phase} />
-
-      {/* Label */}
       <div style={{
-        fontSize: 12, color: "#4b5563", marginTop: 10,
+        fontSize: 12, color: "#4b5563",
         fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.05em",
         transition: "opacity 0.3s",
       }}>
-        {phase === "out" ? "here we go! 🚀" : "pushing your site..."}
+        {phase === "out" ? "here we go! 🚀" : "running your site to you..."}
       </div>
     </div>
   );
@@ -1721,9 +1947,9 @@ export default function WebQokkaLandingPage() {
         <Services />
         <WhyUs />
         <Process />
-        <Team />
+        {/* <Team /> */}
         <Pricing />
-        <Portfolio />
+        {/* <Portfolio /> */}
         <Blog />
         <Testimonials />
         <Contact />
