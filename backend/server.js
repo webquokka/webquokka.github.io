@@ -63,8 +63,12 @@ app.post("/api/contact", async (req, res) => {
 });
 
 // ── GET /api/enquiries ────────────────────────────────────────────────────────
-// Returns all enquiries (protect this route before going to production!)
-app.get("/api/enquiries", async (_req, res) => {
+// Returns all enquiries — requires X-Admin-Key header matching ADMIN_API_KEY env var
+app.get("/api/enquiries", async (req, res) => {
+  const adminKey = process.env.ADMIN_API_KEY;
+  if (!adminKey || req.headers["x-admin-key"] !== adminKey) {
+    return res.status(401).json({ error: "Unauthorized." });
+  }
   try {
     const result = await pool.query(
       `SELECT id, name, business, email, phone, service, message, created_at

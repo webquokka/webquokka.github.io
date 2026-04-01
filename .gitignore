@@ -12,7 +12,8 @@ dist
 dist-ssr
 *.local
 
-# Backend secrets
+# Secrets / env files
+.env
 backend/.env
 backend/node_modules
 
