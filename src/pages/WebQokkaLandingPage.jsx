@@ -191,6 +191,91 @@ const Logo = ({ size = 32 }) => (
 );
 
 /* ─────────────────────────────────────────────
+   NAV QUOKKA MASCOT
+───────────────────────────────────────────── */
+const NavQuokka = ({ pose = 'push-down' }) => {
+  const b = '#c2773a', l = '#e8c49a', d = '#0a0f0d';
+
+  if (pose === 'push-down' || pose === 'push-up') {
+    return (
+      <svg width="64" height="76" viewBox="0 0 64 76" fill="none"
+        style={{ transform: pose === 'push-up' ? 'scaleY(-1)' : 'none', display: 'block' }}>
+        {/* Ears */}
+        <ellipse cx="18" cy="11" rx="7" ry="9" fill={b}/>
+        <ellipse cx="46" cy="11" rx="7" ry="9" fill={b}/>
+        <ellipse cx="18" cy="12" rx="4" ry="6" fill={d}/>
+        <ellipse cx="46" cy="12" rx="4" ry="6" fill={d}/>
+        {/* Head */}
+        <ellipse cx="32" cy="28" rx="17" ry="15" fill={b}/>
+        {/* Cheeks */}
+        <circle cx="17" cy="32" r="6" fill={l} opacity="0.85"/>
+        <circle cx="47" cy="32" r="6" fill={l} opacity="0.85"/>
+        {/* Eyes */}
+        <circle cx="25" cy="25" r="3.5" fill={d}/>
+        <circle cx="39" cy="25" r="3.5" fill={d}/>
+        <circle cx="26.2" cy="23.8" r="1.2" fill="white"/>
+        <circle cx="40.2" cy="23.8" r="1.2" fill="white"/>
+        {/* Nose */}
+        <ellipse cx="32" cy="32" rx="3" ry="2" fill={d}/>
+        {/* Smile */}
+        <path d="M27 37 Q32 41 37 37" stroke={d} strokeWidth="1.5" strokeLinecap="round" fill="none"/>
+        {/* Body */}
+        <ellipse cx="32" cy="57" rx="16" ry="13" fill={b}/>
+        {/* Arms pushing down */}
+        <path d="M17 47 Q9 57 8 68" stroke={b} strokeWidth="7" strokeLinecap="round"/>
+        <path d="M47 47 Q55 57 56 68" stroke={b} strokeWidth="7" strokeLinecap="round"/>
+        {/* Hands */}
+        <circle cx="8" cy="69" r="5" fill={l}/>
+        <circle cx="56" cy="69" r="5" fill={l}/>
+      </svg>
+    );
+  }
+
+  /* pull-right: side view facing right, arms reaching right */
+  if (pose === 'pull-right' || pose === 'pull-left') {
+    return (
+      <svg width="82" height="66" viewBox="0 0 82 66" fill="none"
+        style={{ transform: pose === 'pull-left' ? 'scaleX(-1)' : 'none', display: 'block' }}>
+        {/* Tail */}
+        <path d="M10 42 Q4 33 8 22 Q12 13 8 7" stroke={b} strokeWidth="5" fill="none" strokeLinecap="round"/>
+        {/* Body */}
+        <ellipse cx="36" cy="44" rx="22" ry="14" fill={b}/>
+        {/* Neck */}
+        <ellipse cx="54" cy="33" rx="8" ry="7" fill={b}/>
+        {/* Head */}
+        <ellipse cx="63" cy="24" rx="13" ry="12" fill={b}/>
+        {/* Ears */}
+        <ellipse cx="58" cy="11" rx="5" ry="8" fill={b}/>
+        <ellipse cx="58" cy="12" rx="3" ry="5" fill={d}/>
+        <ellipse cx="70" cy="10" rx="5" ry="7" fill={b}/>
+        <ellipse cx="70" cy="11" rx="3" ry="5" fill={d}/>
+        {/* Eye */}
+        <circle cx="70" cy="22" r="3" fill={d}/>
+        <circle cx="71.2" cy="20.8" r="1" fill="white"/>
+        {/* Cheek */}
+        <circle cx="66" cy="29" r="5" fill={l} opacity="0.85"/>
+        {/* Nose */}
+        <ellipse cx="75" cy="25" rx="2" ry="1.5" fill={d}/>
+        {/* Smile */}
+        <path d="M71 31 Q75 34 79 31" stroke={d} strokeWidth="1.5" strokeLinecap="round" fill="none"/>
+        {/* Arms reaching right (pulling) */}
+        <path d="M50 28 Q64 18 78 15" stroke={b} strokeWidth="6" strokeLinecap="round"/>
+        <path d="M50 38 Q64 42 78 46" stroke={b} strokeWidth="6" strokeLinecap="round"/>
+        {/* Hands */}
+        <circle cx="79" cy="14" r="4.5" fill={l}/>
+        <circle cx="79" cy="47" r="4.5" fill={l}/>
+        {/* Legs */}
+        <path d="M22 56 L16 66" stroke={b} strokeWidth="5" strokeLinecap="round"/>
+        <path d="M37 58 L36 66" stroke={b} strokeWidth="5" strokeLinecap="round"/>
+        <circle cx="15" cy="66" r="4" fill={l}/>
+        <circle cx="35" cy="66" r="4" fill={l}/>
+      </svg>
+    );
+  }
+  return null;
+};
+
+/* ─────────────────────────────────────────────
    NAVBAR
 ───────────────────────────────────────────── */
 const NAV_ANIMS = [
@@ -212,6 +297,7 @@ const Navbar = () => {
   const [particles, setParticles] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const [overlay, setOverlay] = useState(null);
+  const [navQuokka, setNavQuokka] = useState(false);
   const pidRef = useRef(0);
 
   useEffect(() => {
@@ -221,8 +307,9 @@ const Navbar = () => {
   }, []);
 
   useEffect(() => {
-    const t = setTimeout(() => setLoaded(true), 100);
-    return () => clearTimeout(t);
+    const t1 = setTimeout(() => { setLoaded(true); setNavQuokka(true); }, 100);
+    const t2 = setTimeout(() => setNavQuokka(false), 1100);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
 
   const spawnParticles = (e, label) => {
@@ -247,14 +334,13 @@ const Navbar = () => {
     e.preventDefault();
     spawnParticles(e, label);
     const dir = SLIDE_DIRS[Math.floor(Math.random() * SLIDE_DIRS.length)];
-    setOverlay({ dir, phase: 'enter' });
+    setOverlay({ dir });
     setTimeout(() => {
       const target = document.querySelector(href);
       if (target) target.scrollIntoView({ behavior: 'instant' });
       setOpen(false);
-      setOverlay({ dir, phase: 'exit' });
-      setTimeout(() => setOverlay(null), 480);
-    }, 420);
+    }, 900);
+    setTimeout(() => setOverlay(null), 2000);
   };
 
   const links = [
@@ -290,24 +376,41 @@ const Navbar = () => {
         ${Array.from({length:8},(_,i)=>`@keyframes navpop-${i} { 0% { opacity:1; transform:translate(-50%,-50%) translate(0,0) scale(1); } 100% { opacity:0; transform:translate(-50%,-50%) translate(var(--dx),var(--dy)) scale(0.4); } }`).join('')}
         @keyframes nav-slide-down { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:translateY(0); } }
         @keyframes nav-fade-in    { from { opacity:0; transform:translateY(-8px) scale(0.95); } to { opacity:1; transform:translateY(0) scale(1); } }
-        @keyframes ov-enter-left   { from { transform:translateX(-100%); } to { transform:translateX(0%); } }
-        @keyframes ov-exit-left    { from { transform:translateX(0%); } to { transform:translateX(100%); } }
-        @keyframes ov-enter-right  { from { transform:translateX(100%); } to { transform:translateX(0%); } }
-        @keyframes ov-exit-right   { from { transform:translateX(0%); } to { transform:translateX(-100%); } }
-        @keyframes ov-enter-top    { from { transform:translateY(-100%); } to { transform:translateY(0%); } }
-        @keyframes ov-exit-top     { from { transform:translateY(0%); } to { transform:translateY(100%); } }
-        @keyframes ov-enter-bottom { from { transform:translateY(100%); } to { transform:translateY(0%); } }
-        @keyframes ov-exit-bottom  { from { transform:translateY(0%); } to { transform:translateY(-100%); } }
+        @keyframes ov-left   { 0% { transform:translateX(-100%); opacity:1; } 70% { transform:translateX(0%); opacity:1; } 100% { transform:translateX(0%); opacity:0; } }
+        @keyframes ov-right  { 0% { transform:translateX(100%);  opacity:1; } 70% { transform:translateX(0%); opacity:1; } 100% { transform:translateX(0%); opacity:0; } }
+        @keyframes ov-top    { 0% { transform:translateY(-100%); opacity:1; } 70% { transform:translateY(0%); opacity:1; } 100% { transform:translateY(0%); opacity:0; } }
+        @keyframes ov-bottom { 0% { transform:translateY(100%);  opacity:1; } 70% { transform:translateY(0%); opacity:1; } 100% { transform:translateY(0%); opacity:0; } }
+        @keyframes quokka-nav-load {
+          0%   { transform:translateX(-50%) translateY(-80px) scale(0.8); opacity:0; }
+          22%  { transform:translateX(-50%) translateY(6px)  scale(1.05); opacity:1; }
+          55%  { transform:translateX(-50%) translateY(2px)  scale(1);    opacity:1; }
+          80%  { transform:translateX(-50%) translateY(2px)  scale(1);    opacity:0.7; }
+          100% { transform:translateX(-50%) translateY(-60px) scale(0.7); opacity:0; }
+        }
       `}</style>
     {overlay && (
       <div style={{
         position: 'fixed', inset: 0, zIndex: 8999,
-        background: 'linear-gradient(135deg, #0a0f0d 0%, #8b4513 100%)',
-        animation: `ov-${overlay.phase}-${overlay.dir} 0.42s cubic-bezier(0.76,0,0.24,1) forwards`,
+        background: 'linear-gradient(160deg, #111816 0%, #1c1008 40%, #2a1205 100%)',
+        boxShadow: overlay.dir === 'left'  ? '8px 0 48px rgba(0,0,0,0.6)'
+                 : overlay.dir === 'right' ? '-8px 0 48px rgba(0,0,0,0.6)'
+                 : overlay.dir === 'top'   ? '0 8px 48px rgba(0,0,0,0.6)'
+                 :                           '0 -8px 48px rgba(0,0,0,0.6)',
+        animation: `ov-${overlay.dir} 2s cubic-bezier(0.4,0,0.2,1) forwards`,
         pointerEvents: 'none',
       }} />
     )}
     </div>
+
+    {/* Nav-load quokka: pushes the navbar down on first load */}
+    {navQuokka && (
+      <div style={{
+        position: 'fixed', top: 0, left: '50%', zIndex: 9998, pointerEvents: 'none',
+        animation: 'quokka-nav-load 1s cubic-bezier(0.22,1,0.36,1) forwards',
+      }}>
+        <NavQuokka pose="push-down" />
+      </div>
+    )}
 
     <nav style={{
       position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
@@ -998,18 +1101,27 @@ const Contact = () => {
   const [ref, inView] = useInView();
   const [form, setForm] = useState({ name: "", business: "", email: "", phone: "", service: "", message: "" });
   const [status, setStatus] = useState("idle");
+  const [errorMsg, setErrorMsg] = useState("");
 
   const handleChange = (e) => setForm(f => ({ ...f, [e.target.name]: e.target.value }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus("loading");
-    // ── Firebase / backend integration point ──
-    // Replace the timeout below with your Firebase Firestore write or Cloud Function call:
-    // import { addDoc, collection } from "firebase/firestore";
-    // await addDoc(collection(db, "enquiries"), { ...form, createdAt: new Date() });
-    await new Promise(r => setTimeout(r, 1400));
-    setStatus("success");
+    setErrorMsg("");
+    try {
+      const res = await fetch("http://localhost:3001/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Something went wrong.");
+      setStatus("success");
+    } catch (err) {
+      setErrorMsg(err.message || "Failed to send message. Please try again.");
+      setStatus("idle");
+    }
   };
 
   return (
@@ -1121,6 +1233,9 @@ const Contact = () => {
                     style={{ resize: "vertical" }}
                   />
                 </div>
+                {errorMsg && (
+                  <p style={{ color: "#dc2626", fontSize: 13, marginBottom: 12, textAlign: "center" }}>{errorMsg}</p>
+                )}
                 <button type="submit" className="btn-brown" style={{ width: "100%", justifyContent: "center", opacity: status === "loading" ? 0.75 : 1 }} disabled={status === "loading"}>
                   {status === "loading" ? "Sending…" : "Send Message →"}
                 </button>

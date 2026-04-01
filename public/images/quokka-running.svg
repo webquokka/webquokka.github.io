@@ -1,0 +1,70 @@
+<svg width="600" height="400" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="600" height="400" fill="#e8f4f0"/>
+  
+  <!-- Grass -->
+  <ellipse cx="300" cy="350" rx="280" ry="40" fill="#a8d5ba" opacity="0.6"/>
+  
+  <!-- Running Quokka -->
+  <g transform="translate(200, 180)">
+    <!-- Body -->
+    <ellipse cx="0" cy="0" rx="60" ry="55" fill="#c2773a"/>
+    
+    <!-- Head -->
+    <circle cx="0" cy="-50" r="45" fill="#c2773a"/>
+    
+    <!-- Ears -->
+    <ellipse cx="-25" cy="-85" rx="18" ry="28" fill="#c2773a" transform="rotate(-25 -25 -85)"/>
+    <ellipse cx="25" cy="-85" rx="18" ry="28" fill="#c2773a" transform="rotate(25 25 -85)"/>
+    <ellipse cx="-25" cy="-85" rx="10" ry="16" fill="#e8c49a" transform="rotate(-25 -25 -85)"/>
+    <ellipse cx="25" cy="-85" rx="10" ry="16" fill="#e8c49a" transform="rotate(25 25 -85)"/>
+    
+    <!-- Eyes (wide, happy) -->
+    <circle cx="-15" cy="-60" r="8" fill="#0a0f0d"/>
+    <circle cx="15" cy="-60" r="8" fill="#0a0f0d"/>
+    <circle cx="-13" cy="-62" r="3" fill="white"/>
+    <circle cx="17" cy="-62" r="3" fill="white"/>
+    
+    <!-- Nose -->
+    <circle cx="0" cy="-45" r="6" fill="#0a0f0d"/>
+    
+    <!-- Big smile -->
+    <path d="M -10 -38 Q 0 -30 10 -38" stroke="#0a0f0d" stroke-width="3" fill="none" stroke-linecap="round"/>
+    
+    <!-- Cheeks -->
+    <circle cx="-35" cy="-50" r="12" fill="#e8c49a" opacity="0.8"/>
+    <circle cx="35" cy="-50" r="12" fill="#e8c49a" opacity="0.8"/>
+    
+    <!-- Front left leg (stretched forward) -->
+    <ellipse cx="-35" cy="50" rx="18" ry="35" fill="#c2773a" transform="rotate(-45 -35 50)"/>
+    <ellipse cx="-35" cy="85" rx="16" ry="20" fill="#a85a2a"/>
+    
+    <!-- Front right leg (bent, mid-run) -->
+    <ellipse cx="35" cy="65" rx="18" ry="38" fill="#c2773a" transform="rotate(-20 35 65)"/>
+    <ellipse cx="45" cy="100" rx="16" ry="20" fill="#a85a2a"/>
+    
+    <!-- Back left leg (up, running motion) -->
+    <ellipse cx="-50" cy="30" rx="16" ry="40" fill="#c2773a" transform="rotate(30 -50 30)"/>
+    <ellipse cx="-60" cy="65" rx="14" ry="18" fill="#a85a2a"/>
+    
+    <!-- Back right leg (stretched) -->
+    <ellipse cx="50" cy="45" rx="16" ry="35" fill="#c2773a" transform="rotate(-35 50 45)"/>
+    <ellipse cx="60" cy="75" rx="14" ry="18" fill="#a85a2a"/>
+    
+    <!-- Tail (curved, action pose) -->
+    <path d="M 60 -5 Q 95 -25 100 0" stroke="#c2773a" stroke-width="28" fill="none" stroke-linecap="round"/>
+    <path d="M 60 -5 Q 95 -25 100 0" stroke="#a85a2a" stroke-width="14" fill="none" stroke-linecap="round" opacity="0.6"/>
+  </g>
+  
+  <!-- Motion lines -->
+  <g stroke="#c2773a" stroke-width="4" stroke-linecap="round" opacity="0.4">
+    <line x1="80" y1="200" x2="40" y2="200"/>
+    <line x1="70" y1="240" x2="20" y2="240"/>
+    <line x1="90" y1="160" x2="50" y2="160"/>
+  </g>
+  
+  <!-- Speed effect dots -->
+  <circle cx="40" cy="200" r="5" fill="#c2773a" opacity="0.3"/>
+  <circle cx="25" cy="240" r="4" fill="#c2773a" opacity="0.3"/>
+  <circle cx="50" cy="160" r="4" fill="#c2773a" opacity="0.3"/>
+</svg>
