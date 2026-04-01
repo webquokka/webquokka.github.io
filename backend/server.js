@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import pool from "./db/index.js";
+import supabase from "./db/index.js";
 
 dotenv.config();
 
@@ -21,11 +21,9 @@ app.use(
 app.get("/health", (_req, res) => res.json({ status: "ok" }));
 
 // ── POST /api/contact ─────────────────────────────────────────────────────────
-// Stores a new enquiry from the contact form
 app.post("/api/contact", async (req, res) => {
   const { name, business, email, phone, service, message } = req.body;
 
-  // Basic validation
   if (!name || !email || !service || !message) {
     return res.status(400).json({ error: "name, email, service, and message are required." });
   }
@@ -36,50 +34,48 @@ app.post("/api/contact", async (req, res) => {
 
   const ip = req.headers["x-forwarded-for"]?.split(",")[0].trim() || req.socket.remoteAddress;
 
-  try {
-    const result = await pool.query(
-      `INSERT INTO enquiries (name, business, email, phone, service, message, ip_address)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)
-       RETURNING id, created_at`,
-      [
-        name.trim(),
-        business?.trim() || null,
-        email.trim().toLowerCase(),
-        phone?.trim() || null,
-        service.trim(),
-        message.trim(),
-        ip,
-      ]
-    );
+  const { data, error } = await supabase
+    .from("enquiries")
+    .insert([{
+      name: name.trim(),
+      business: business?.trim() || null,
+      email: email.trim().toLowerCase(),
+      phone: phone?.trim() || null,
+      service: service.trim(),
+      message: message.trim(),
+      ip_address: ip,
+    }])
+    .select("id, created_at")
+    .single();
 
-    const { id, created_at } = result.rows[0];
-    console.log(`[${created_at.toISOString()}] New enquiry #${id} from ${email}`);
-
-    return res.status(201).json({ success: true, id });
-  } catch (err) {
-    console.error("DB error saving enquiry:", err);
+  if (error) {
+    console.error("Supabase error saving enquiry:", error);
     return res.status(500).json({ error: "Failed to save your message. Please try again." });
   }
+
+  console.log(`[${data.created_at}] New enquiry #${data.id} from ${email}`);
+  return res.status(201).json({ success: true, id: data.id });
 });
 
 // ── GET /api/enquiries ────────────────────────────────────────────────────────
-// Returns all enquiries — requires X-Admin-Key header matching ADMIN_API_KEY env var
+// Requires X-Admin-Key header matching ADMIN_API_KEY env var
 app.get("/api/enquiries", async (req, res) => {
   const adminKey = process.env.ADMIN_API_KEY;
   if (!adminKey || req.headers["x-admin-key"] !== adminKey) {
     return res.status(401).json({ error: "Unauthorized." });
   }
-  try {
-    const result = await pool.query(
-      `SELECT id, name, business, email, phone, service, message, created_at
-       FROM enquiries
-       ORDER BY created_at DESC`
-    );
-    return res.json(result.rows);
-  } catch (err) {
-    console.error("DB error fetching enquiries:", err);
+
+  const { data, error } = await supabase
+    .from("enquiries")
+    .select("id, name, business, email, phone, service, message, created_at")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Supabase error fetching enquiries:", error);
     return res.status(500).json({ error: "Failed to retrieve enquiries." });
   }
+
+  return res.json(data);
 });
 
 // ── Start ─────────────────────────────────────────────────────────────────────

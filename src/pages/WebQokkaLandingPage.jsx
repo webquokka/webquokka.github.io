@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import supabase from "../lib/supabase.js";
 
 /* ─────────────────────────────────────────────
    UTILITY: simple intersection-observer hook
@@ -1109,18 +1110,21 @@ const Contact = () => {
     e.preventDefault();
     setStatus("loading");
     setErrorMsg("");
-    try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/contact`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Something went wrong.");
-      setStatus("success");
-    } catch (err) {
-      setErrorMsg(err.message || "Failed to send message. Please try again.");
+
+    const { error } = await supabase.from("enquiries").insert([{
+      name: form.name.trim(),
+      business: form.business?.trim() || null,
+      email: form.email.trim().toLowerCase(),
+      phone: form.phone?.trim() || null,
+      service: form.service.trim(),
+      message: form.message.trim(),
+    }]);
+
+    if (error) {
+      setErrorMsg("Failed to send message. Please try again.");
       setStatus("idle");
+    } else {
+      setStatus("success");
     }
   };
 
